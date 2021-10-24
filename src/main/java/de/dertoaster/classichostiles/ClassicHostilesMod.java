@@ -4,6 +4,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import net.minecraft.block.Block;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -14,6 +15,8 @@ import net.minecraftforge.fml.event.lifecycle.InterModEnqueueEvent;
 import net.minecraftforge.fml.event.lifecycle.InterModProcessEvent;
 import net.minecraftforge.fml.event.server.FMLServerStartingEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
+import net.minecraftforge.fml.network.NetworkRegistry;
+import net.minecraftforge.fml.network.simple.SimpleChannel;
 import software.bernie.geckolib3.GeckoLib;
 
 // The value here should match an entry in the META-INF/mods.toml file
@@ -25,6 +28,13 @@ public class ClassicHostilesMod {
 	// Directly reference a log4j logger.
 	public static final Logger LOGGER = LogManager.getLogger();
 	
+	private static final String PROTOCOL_VERSION = "1";
+	public static final SimpleChannel NETWORK = NetworkRegistry.newSimpleChannel(
+	    new ResourceLocation(MODID, "main-network-channel"),
+	    () -> PROTOCOL_VERSION,
+	    PROTOCOL_VERSION::equals,
+	    PROTOCOL_VERSION::equals
+	);
 
 	public ClassicHostilesMod() {
 		//Initialize Geckolib
