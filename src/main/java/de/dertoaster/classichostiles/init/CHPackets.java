@@ -15,7 +15,7 @@ public class CHPackets {
 				SPacketUpdateAnimationOfEntity.class, 
 				SPacketUpdateAnimationOfEntity::toBytes, 
 				SPacketUpdateAnimationOfEntity::fromBytes, 
-				CPacketHandlerAnimationUpdateOfEntity::onMessage
+				CPacketHandlerAnimationUpdateOfEntity::handlePacket
 		);
 	}
 	

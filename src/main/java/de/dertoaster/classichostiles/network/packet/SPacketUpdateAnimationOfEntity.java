@@ -31,7 +31,7 @@ public class SPacketUpdateAnimationOfEntity {
 		return result;
 	}
 
-	public void toBytes(SPacketUpdateAnimationOfEntity packet, PacketBuffer buf) {
+	public static void toBytes(SPacketUpdateAnimationOfEntity packet, PacketBuffer buf) {
 		buf.writeInt(packet.entityId);
 		buf.writeUtf(packet.animationID);
 	}

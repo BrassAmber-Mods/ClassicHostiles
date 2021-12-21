@@ -7,11 +7,11 @@ import de.dertoaster.classichostiles.network.packet.SPacketUpdateAnimationOfEnti
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.network.NetworkEvent.Context;
+import net.minecraftforge.fml.network.NetworkEvent;
 
 public class CPacketHandlerAnimationUpdateOfEntity {
 
-	public static void handlePacket(final SPacketUpdateAnimationOfEntity packet, Supplier<Context> context) {
+	public static void handlePacket(SPacketUpdateAnimationOfEntity packet, Supplier<NetworkEvent.Context> context) {
 		context.get().enqueueWork(() -> {
 			World world = Minecraft.getInstance().level;
 			Entity entity = world.getEntity(packet.getEntityId());
