@@ -10,11 +10,11 @@ public class FoxEntityRenderer extends FoxRenderer {
 	public static final ResourceLocation[] TEXTURES = new ResourceLocation[] {
 			new ResourceLocation("textures/entity/fox/fox.png"),
 			new ResourceLocation("textures/entity/fox/snow_fox.png"),
-			new ResourceLocation("textures/entity/fox/yellow_fox.png"),
+			new ResourceLocation("textures/entity/fox/plains_fox.png"),
 			
 			new ResourceLocation("textures/entity/fox/fox_sleep.png"),
 			new ResourceLocation("textures/entity/fox/snow_fox_sleep.png"),
-			new ResourceLocation("textures/entity/fox/yellow_fox_sleep.png"),
+			new ResourceLocation("textures/entity/fox/plains_fox_sleep.png"),
 	};
 
 	public FoxEntityRenderer(EntityRendererManager p_i50969_1_) {
