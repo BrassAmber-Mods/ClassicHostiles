@@ -16,3 +16,4 @@ Creature mod for minecraft 1.16.5
  - Put a small description above the function if it is not trivial
  - Once something can be copied 1:1 => Move it to a method!
  - static, final and static-final fields are to be named in upper snake case (e.g. THIS_IS_A_DEMO), that is to clearly identify something as a constant
+ - The progress is to be tracked using the existing github projects. If you choose to do one ticket: Assign yourself on the issue and comment on that to mark progress
