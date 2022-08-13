@@ -1,0 +1,7 @@
+{
+	//Entities
+	"entity.classichostiles.boar": "Boar",
+	
+	//Entity Spawn Eggs
+	"item.classichostiles.boar_spawn_egg": "Boar Spawn Egg"
+}
