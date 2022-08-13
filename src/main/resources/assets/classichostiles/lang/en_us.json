@@ -1,7 +1,9 @@
 {
 	//Entities
 	"entity.classichostiles.boar": "Boar",
+	"entity.classichostiles.fox": "Fox",
 	
 	//Entity Spawn Eggs
-	"item.classichostiles.boar_spawn_egg": "Boar Spawn Egg"
+	"item.classichostiles.boar_spawn_egg": "Boar Spawn Egg",
+	"item.classichostiles.fox_spawn_egg": "Plains Fox Spawn Egg" //Temporary
 }

@@ -1,6 +1,7 @@
 1.19.x Changelog
 1.0.0
 ====
+ - 1.0.1 Added Plains variant for Foxes
  - 1.0.0
 	Start mod on Forge version 1.19.2
 	GeckoLib version 1.19-3.1.16
