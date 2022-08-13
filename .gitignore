@@ -15,7 +15,10 @@ out
 
 # gradle
 build
-.gradle
+*.gradle
+
+# MAC
+*.DS_Store
 
 # other
 eclipse
