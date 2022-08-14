@@ -1,6 +1,13 @@
 1.19.x Changelog
 1.0.0
 ====
+ - 1.0.4
+	Added variant-specific loot tables for Bears
+	Removed Bear Spawn Egg
+	    * Bears now replace spawning Polar Bears in Biomes where it can't snow
+	    * Note: Replacing is still random between black and brown Bears
+	Changed name of Polar Bear Spawn Egg to Bear Spawn Egg
+	Changed Boar model size to +20% off the original size
  - 1.0.3
 	Some small tweaks
 	Moved some files

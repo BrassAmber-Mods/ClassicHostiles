@@ -10,7 +10,6 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.tags.BiomeTags;
 import net.minecraft.tags.BlockTags;
@@ -30,7 +29,7 @@ import net.minecraft.world.level.biome.Biome;
 
 /**
  * @author  Xrated_junior
- * @version 1.19.2-1.0.3
+ * @version 1.19.2-1.0.4
  */
 public class BearEntity extends PolarBear {
 	private static final EntityDataAccessor<Integer> DATA_VARIANT_ID = SynchedEntityData.defineId(BearEntity.class, EntityDataSerializers.INT);
@@ -38,15 +37,6 @@ public class BearEntity extends PolarBear {
 
 	public BearEntity(EntityType<? extends PolarBear> bearEntity, Level level) {
 		super(bearEntity, level);
-	}
-	
-	/**
-	 * TODO But for now;
-	 * Use Vanilla Polar Bear loot table.
-	 */
-	@Override
-	public ResourceLocation getDefaultLootTable() {
-		return new ResourceLocation("minecraft", "entities/polar_bear");
 	}
 
 	/*********************************************************** Mob data ********************************************************/

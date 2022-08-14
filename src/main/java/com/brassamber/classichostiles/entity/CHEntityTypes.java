@@ -27,7 +27,7 @@ import net.minecraftforge.registries.RegistryObject;
 
 /**
  * @author  Xrated_junior
- * @version 1.19.2-1.0.3
+ * @version 1.19.2-1.0.4
  */
 @Mod.EventBusSubscriber(modid = ClassicHostiles.MOD_ID, bus = Bus.MOD)
 public class CHEntityTypes {
@@ -36,22 +36,29 @@ public class CHEntityTypes {
 	/*********************************************************** Hostile ********************************************************/
 
 	public static final RegistryObject<EntityType<BoarEntity>> BOAR = registerEntityType("boar", 0x573a1b, 0x363636, EntityType.Builder.of(BoarEntity::new, MobCategory.CREATURE).sized(0.9F, 0.9F).clientTrackingRange(10));
-	
+
 	/*********************************************************** Neutral ********************************************************/
 
 	// TODO Immunity Blocks should be BlockTags instead for more configuration options
 	public static final RegistryObject<EntityType<PlainsFoxEntity>> PLAINS_FOX = registerEntityType("fox", 0x573a1b, 0x363636, EntityType.Builder.of(PlainsFoxEntity::new, MobCategory.CREATURE).sized(0.6F, 0.7F).clientTrackingRange(8).immuneTo(Blocks.SWEET_BERRY_BUSH));
-	public static final RegistryObject<EntityType<BearEntity>> BEAR = registerEntityType("bear", 0x573a1b, 0x363636, EntityType.Builder.of(BearEntity::new, MobCategory.CREATURE).immuneTo(Blocks.SWEET_BERRY_BUSH).sized(1.4F, 1.4F).clientTrackingRange(10));
+	public static final RegistryObject<EntityType<BearEntity>> BEAR = registerEntityType("bear", EntityType.Builder.of(BearEntity::new, MobCategory.CREATURE).immuneTo(Blocks.SWEET_BERRY_BUSH).sized(1.4F, 1.4F).clientTrackingRange(10));
 
 	/**
 	 * Helper method for registering Mob EntityTypes
 	 */
 	private static <T extends Mob> RegistryObject<EntityType<T>> registerEntityType(String registryName, int eggBackgroundColor, int eggHighlightColor, EntityType.Builder<T> builder) {
 		// Register Mob
-		RegistryObject<EntityType<T>> entityType = DEFERRED_ENTITY_TYPES.register(registryName, () -> builder.build(ClassicHostiles.find(registryName)));
+		RegistryObject<EntityType<T>> entityType = registerEntityType(registryName, builder);
 		// Register Spawn Egg
 		CHItems.registerItem(registryName + "_spawn_egg", () -> new ForgeSpawnEggItem(entityType, eggBackgroundColor, eggHighlightColor, new Item.Properties().tab(CreativeModeTab.TAB_MISC)));
 		return entityType;
+	}
+
+	/**
+	 * Helper method for registering EntityTypes without Spawn Eggs
+	 */
+	private static <T extends Entity> RegistryObject<EntityType<T>> registerEntityType(String registryName, EntityType.Builder<T> builder) {
+		return DEFERRED_ENTITY_TYPES.register(registryName, () -> builder.build(ClassicHostiles.find(registryName)));
 	}
 
 	/**
@@ -68,14 +75,6 @@ public class CHEntityTypes {
 		event.put(BOAR.get(), BoarEntity.createAttributes().build());
 		event.put(PLAINS_FOX.get(), Fox.createAttributes().build());
 		event.put(BEAR.get(), BearEntity.createAttributes().build());
-	}
-
-	/**
-	 * Helper method for registering miscellaneous EntityTypes
-	 */
-	@SuppressWarnings("unused")
-	private static <T extends Entity> RegistryObject<EntityType<T>> registerEntityType(String registryName, EntityType.Builder<T> builder) {
-		return DEFERRED_ENTITY_TYPES.register(registryName, () -> builder.build(registryName));
 	}
 
 	private static <T extends Mob> void registerSpawnPlacement(EntityType<T> entityType, SpawnPlacements.SpawnPredicate<T> placementPredicate) {
