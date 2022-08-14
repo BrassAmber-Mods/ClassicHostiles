@@ -16,13 +16,19 @@ import software.bernie.geckolib3.renderers.geo.GeoEntityRenderer;
 
 /**
  * @author  Xrated_junior
- * @version 1.19.2-1.0.0
+ * @version 1.19.2-1.0.2
  */
 public abstract class AbstractAnimalRenderer<T extends LivingEntity & IAnimatable> extends GeoEntityRenderer<T> {
+	protected float modelScale;
 
 	public AbstractAnimalRenderer(Context renderManager, AnimatedGeoModel<T> modelProvider, float shadowRadius) {
+		this(renderManager, modelProvider, shadowRadius, 1.0f);
+	}
+
+	public AbstractAnimalRenderer(Context renderManager, AnimatedGeoModel<T> modelProvider, float shadowRadius, float modelScale) {
 		super(renderManager, modelProvider);
 		this.shadowRadius = shadowRadius;
+		this.modelScale = modelScale;
 	}
 
 	/**
@@ -31,7 +37,9 @@ public abstract class AbstractAnimalRenderer<T extends LivingEntity & IAnimatabl
 	@Override
 	public RenderType getRenderType(T animatable, float partialTicks, PoseStack stack, @Nullable MultiBufferSource renderTypeBuffer, @Nullable VertexConsumer vertexBuilder, int packedLightIn, ResourceLocation textureLocation) {
 		if (animatable.isBaby()) {
-			stack.scale(0.7f, 0.7f, 0.75f);
+			stack.scale(this.modelScale * 0.7f, this.modelScale * 0.7f, this.modelScale * 0.75f);
+		} else {
+			stack.scale(this.modelScale, this.modelScale, this.modelScale);
 		}
 		return super.getRenderType(animatable, partialTicks, stack, renderTypeBuffer, vertexBuilder, packedLightIn, textureLocation);
 	}

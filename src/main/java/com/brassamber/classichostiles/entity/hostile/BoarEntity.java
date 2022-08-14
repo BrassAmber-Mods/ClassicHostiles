@@ -54,7 +54,7 @@ import software.bernie.geckolib3.core.manager.AnimationFactory;
 
 /**
  * @author  Xrated_junior
- * @version 1.19.2-1.0.0
+ * @version 1.19.2-1.0.2
  */
 public class BoarEntity extends AbstractHostileAnimal implements IAnimatable {
 	private static final EntityDataAccessor<Integer> DATA_VARIANT_ID = SynchedEntityData.defineId(BoarEntity.class, EntityDataSerializers.INT);
@@ -89,7 +89,7 @@ public class BoarEntity extends AbstractHostileAnimal implements IAnimatable {
 	@Override
 	protected void registerGoals() {
 		this.goalSelector.addGoal(0, new FloatGoal(this));
-		this.goalSelector.addGoal(2, new MeleeAttackGoal(this, 1.0D, false));
+		this.goalSelector.addGoal(2, new MeleeAttackGoal(this, 1.2D, false));
 		this.goalSelector.addGoal(3, new BreedGoal(this, 1.0D));
 		// TODO Shouldn't be able to tempt I think? Check with Brass
 		//		this.goalSelector.addGoal(4, new TemptGoal(this, 1.2D, FOOD_ITEMS, false));
@@ -109,7 +109,7 @@ public class BoarEntity extends AbstractHostileAnimal implements IAnimatable {
 
 	@Override
 	protected float getStandingEyeHeight(Pose poseIn, EntityDimensions sizeIn) {
-		return this.isBaby() ? sizeIn.height * 0.5F : sizeIn.height * 0.85F;
+		return this.isBaby() ? sizeIn.height * 0.9F : sizeIn.height * 0.8F;
 	}
 
 	/*********************************************************** Attack Specifications ********************************************************/
