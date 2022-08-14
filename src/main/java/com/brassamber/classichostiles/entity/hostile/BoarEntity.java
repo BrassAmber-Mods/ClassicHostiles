@@ -54,7 +54,7 @@ import software.bernie.geckolib3.core.manager.AnimationFactory;
 
 /**
  * @author  Xrated_junior
- * @version 1.19.2-1.0.2
+ * @version 1.19.2-1.0.3
  */
 public class BoarEntity extends AbstractHostileAnimal implements IAnimatable {
 	private static final EntityDataAccessor<Integer> DATA_VARIANT_ID = SynchedEntityData.defineId(BoarEntity.class, EntityDataSerializers.INT);
@@ -69,16 +69,19 @@ public class BoarEntity extends AbstractHostileAnimal implements IAnimatable {
 
 	/*********************************************************** Mob data ********************************************************/
 
+	@Override
 	public void addAdditionalSaveData(CompoundTag compoundTag) {
 		super.addAdditionalSaveData(compoundTag);
 		compoundTag.putInt("Variant", this.getVariant());
 	}
 
+	@Override
 	public void readAdditionalSaveData(CompoundTag compoundTag) {
 		super.readAdditionalSaveData(compoundTag);
 		this.setVariant(compoundTag.getInt("Variant"));
 	}
 
+	@Override
 	protected void defineSynchedData() {
 		super.defineSynchedData();
 		this.entityData.define(DATA_VARIANT_ID, 0);
@@ -118,6 +121,7 @@ public class BoarEntity extends AbstractHostileAnimal implements IAnimatable {
 	 * Changed to bypass armor and a chance disable shields.
 	 * Referenced {@link Mob#doHurtTarget}
 	 */
+	@Override
 	public boolean doHurtTarget(Entity targetEntity) {
 		float attackDamage = (float) this.getAttributeValue(Attributes.ATTACK_DAMAGE);
 		float attackKnockback = (float) this.getAttributeValue(Attributes.ATTACK_KNOCKBACK);
@@ -185,6 +189,7 @@ public class BoarEntity extends AbstractHostileAnimal implements IAnimatable {
 
 	/*********************************************************** Baby ********************************************************/
 
+	@Override
 	public BoarEntity getBreedOffspring(ServerLevel serverLevel, AgeableMob entityIn) {
 		BoarEntity babyBoar = CHEntityTypes.BOAR.get().create(serverLevel);
 		babyBoar.setVariant(this.random.nextBoolean() ? this.getVariant() : babyBoar.getVariant());
@@ -205,6 +210,12 @@ public class BoarEntity extends AbstractHostileAnimal implements IAnimatable {
 		return Mth.clamp(this.entityData.get(DATA_VARIANT_ID), 0, VARIANTS - 1);
 	}
 
+	/**
+	 * 0: Black
+	 * 1: Brown
+	 * 2: Grey
+	 * 3: Tan
+	 */
 	public void setVariant(int variant) {
 		this.entityData.set(DATA_VARIANT_ID, variant);
 	}

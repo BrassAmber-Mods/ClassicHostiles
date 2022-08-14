@@ -1,9 +1,9 @@
-package com.brassamber.classichostiles.entity.client.model;
+package com.brassamber.classichostiles.entity.client.model.hostile;
 
 import javax.annotation.Nullable;
 
 import com.brassamber.classichostiles.ClassicHostiles;
-import com.brassamber.classichostiles.entity.client.renderer.BoarRenderer;
+import com.brassamber.classichostiles.entity.client.renderer.hostile.BoarRenderer;
 import com.brassamber.classichostiles.entity.hostile.BoarEntity;
 
 import net.minecraft.client.Minecraft;

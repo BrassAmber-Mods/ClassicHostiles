@@ -1,6 +1,7 @@
-package com.brassamber.classichostiles.entity.client.renderer;
+package com.brassamber.classichostiles.entity.client.renderer.hostile;
 
-import com.brassamber.classichostiles.entity.client.model.BoarModel;
+import com.brassamber.classichostiles.entity.client.model.hostile.BoarModel;
+import com.brassamber.classichostiles.entity.client.renderer.AbstractAnimalRenderer;
 import com.brassamber.classichostiles.entity.hostile.BoarEntity;
 
 import net.minecraft.client.renderer.entity.EntityRendererProvider.Context;

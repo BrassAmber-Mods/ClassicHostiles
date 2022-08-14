@@ -1,4 +1,4 @@
-package com.brassamber.classichostiles.entity.client.renderer;
+package com.brassamber.classichostiles.entity.client.renderer.neutral;
 
 import com.brassamber.classichostiles.ClassicHostiles;
 

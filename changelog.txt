@@ -1,7 +1,20 @@
 1.19.x Changelog
 1.0.0
 ====
- - 1.0.1 Added Plains variant for Foxes
+ - 1.0.3
+	Some small tweaks
+	Moved some files
+	Added black and brown variants for Bears
+	Added Bones to Boar drops
+ - 1.0.2
+	Increased Boar model size with 25%
+	Added Boar animations
+	Increased movement speed for Boar with 20% when attacking
+	Corrected Boar eye height
+	Deleted placeholder Boar GeckoLib animation
+	Fixed rotation points on Boar model
+ - 1.0.1
+	Added Plains variant for Foxes
  - 1.0.0
 	Start mod on Forge version 1.19.2
 	GeckoLib version 1.19-3.1.16
