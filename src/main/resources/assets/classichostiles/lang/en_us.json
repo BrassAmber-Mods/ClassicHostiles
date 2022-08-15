@@ -1,11 +1,18 @@
 {
-	//Entities
+	// Entities
 	"entity.classichostiles.boar": "Boar",
 	"entity.classichostiles.fox": "Fox",
 	"entity.classichostiles.bear": "Bear",
 	
-	//Entity Spawn Eggs
+	// Entity Spawn Eggs
 	"item.classichostiles.boar_spawn_egg": "Boar Spawn Egg",
-	"item.classichostiles.fox_spawn_egg": "Plains Fox Spawn Egg", //Temporary
-	"item.classichostiles.bear_spawn_egg": "Bear Spawn Egg"
+	"item.classichostiles.fox_spawn_egg": "Plains Fox Spawn Egg", // Temporary
+	
+	"item.classichostiles.bear_spawn_egg": "Bear Spawn Egg",
+	
+	// Items
+	"item.classichostiles.floral_fluid_bucket": "Floral Fluid Bucket",
+	
+	// Blocks
+	"block.classichostiles.floral_fluid_bucket": "Floral Fluid"
 }

@@ -1,4 +1,4 @@
-package com.brassamber.classichostiles.entity.passive;
+package com.brassamber.classichostiles.entity.neutral;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
