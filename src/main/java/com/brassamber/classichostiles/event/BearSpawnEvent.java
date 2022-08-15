@@ -1,6 +1,5 @@
 package com.brassamber.classichostiles.event;
 
-import com.brassamber.classichostiles.ClassicHostiles;
 import com.brassamber.classichostiles.entity.CHEntityTypes;
 import com.brassamber.classichostiles.entity.neutral.BearEntity;
 
@@ -16,7 +15,7 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 /**
  * @author  Xrated_junior
- * @version 1.19.2-1.0.4
+ * @version 1.19.2-1.0.6
  */
 public class BearSpawnEvent {
 
@@ -47,7 +46,6 @@ public class BearSpawnEvent {
 	@SubscribeEvent
 	public void onTooltip(final ItemTooltipEvent event) {
 		if (event.getItemStack().getItem().equals(Items.POLAR_BEAR_SPAWN_EGG)) {
-			ClassicHostiles.LOGGER.info(event.getToolTip().get(0));
 			event.getToolTip().set(0, Component.translatable("item.classichostiles.bear_spawn_egg"));
 		}
 	}

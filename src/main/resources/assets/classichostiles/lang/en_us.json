@@ -3,10 +3,12 @@
 	"entity.classichostiles.boar": "Boar",
 	"entity.classichostiles.fox": "Fox",
 	"entity.classichostiles.bear": "Bear",
+	"entity.classichostiles.moobloom": "Moobloom",
 	
 	// Entity Spawn Eggs
 	"item.classichostiles.boar_spawn_egg": "Boar Spawn Egg",
 	"item.classichostiles.fox_spawn_egg": "Plains Fox Spawn Egg", // Temporary
+	"item.classichostiles.moobloom_spawn_egg": "Moobloom Spawn Egg",
 	
 	"item.classichostiles.bear_spawn_egg": "Bear Spawn Egg",
 	

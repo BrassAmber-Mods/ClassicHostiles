@@ -65,6 +65,6 @@ public class CHFluids {
 	}
 
 	public static ForgeFlowingFluid.Properties createProperties() {
-		return new ForgeFlowingFluid.Properties(FLORAL_FLUID_TYPE, FLORAL_FLUID, FLOWING_FLORAL_FLUID).bucket(CHItems.FLORAL_FLUID_BUCKET).block(CHBlocks.FLORAL_FLUID_BLOCK).slopeFindDistance(1).levelDecreasePerBlock(2).tickRate(20);
+		return new ForgeFlowingFluid.Properties(FLORAL_FLUID_TYPE, FLORAL_FLUID, FLOWING_FLORAL_FLUID).bucket(CHItems.FLORAL_FLUID_BUCKET).block(CHBlocks.FLORAL_FLUID_BLOCK).slopeFindDistance(1).levelDecreasePerBlock(2).tickRate(15);
 	}
 }
