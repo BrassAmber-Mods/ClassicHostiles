@@ -1,6 +1,11 @@
 1.19.x Changelog
 1.0.0
 ====
+ - 1.0.5
+	Added Floral Fluid
+	Added Floral Fluid Bucket
+	Moved Plains Fox from passive to neutral
+	Deleted Bear Spawn Egg Model
  - 1.0.4
 	Added variant-specific loot tables for Bears
 	Removed Bear Spawn Egg
