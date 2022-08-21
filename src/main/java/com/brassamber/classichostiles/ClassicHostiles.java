@@ -6,6 +6,7 @@ import org.apache.logging.log4j.Logger;
 import com.brassamber.classichostiles.block.CHBlocks;
 import com.brassamber.classichostiles.entity.CHEntityTypes;
 import com.brassamber.classichostiles.event.BearSpawnEvent;
+import com.brassamber.classichostiles.event.MoobloomShearEvent;
 import com.brassamber.classichostiles.fluid.CHFluids;
 import com.brassamber.classichostiles.item.CHItems;
 import com.brassamber.classichostiles.util.CustomDispenserBehavior;
@@ -39,7 +40,7 @@ public class ClassicHostiles {
 		CHFluids.DEFERRED_FLUID_TYPES.register(modEventBus);
 		CHFluids.DEFERRED_FLUIDS.register(modEventBus);
 
-		MinecraftForge.EVENT_BUS.register(this);
+		CHMobSpawnModifiers.DEFERRED_BIOME_MODIFIER_SERIALIZER.register(modEventBus);
 
 		modEventBus.addListener(this::commonSetup);
 		modEventBus.addListener(this::clientSetup);
