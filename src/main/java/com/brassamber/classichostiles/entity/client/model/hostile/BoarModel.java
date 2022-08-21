@@ -1,11 +1,16 @@
 package com.brassamber.classichostiles.entity.client.model.hostile;
 
+import java.util.Map;
+
 import javax.annotation.Nullable;
 
 import com.brassamber.classichostiles.ClassicHostiles;
 import com.brassamber.classichostiles.entity.client.renderer.hostile.BoarRenderer;
 import com.brassamber.classichostiles.entity.hostile.BoarEntity;
+import com.brassamber.classichostiles.entity.hostile.BoarEntity.BoarVariant;
+import com.google.common.collect.Maps;
 
+import net.minecraft.Util;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.entity.LivingEntityRenderer;
 import net.minecraft.resources.ResourceLocation;
@@ -19,16 +24,17 @@ import software.bernie.geckolib3.model.AnimatedGeoModel;
 
 /**
  * @author  Xrated_junior
- * @version 1.19.2-1.0.2
+ * @version 1.19.2-1.0.7
  */
 @OnlyIn(Dist.CLIENT)
 public class BoarModel extends AnimatedGeoModel<BoarEntity> {
-	private static final ResourceLocation[] BOAR_TEXTURES = new ResourceLocation[] {
-		ClassicHostiles.locate("textures/entity/boar/boar_black.png"),
-		ClassicHostiles.locate("textures/entity/boar/boar_brown.png"),
-		ClassicHostiles.locate("textures/entity/boar/boar_grey.png"),
-		ClassicHostiles.locate("textures/entity/boar/boar_tan.png")
-	};
+	private static final Map<BoarVariant, ResourceLocation> BOAR_TEXTURES = Util.make(Maps.newHashMap(), (texture) -> {
+		texture.put(BoarVariant.BLACK, ClassicHostiles.locate("textures/entity/boar/boar_black.png"));
+		texture.put(BoarVariant.BROWN, ClassicHostiles.locate("textures/entity/boar/boar_brown.png"));
+		texture.put(BoarVariant.GREY, ClassicHostiles.locate("textures/entity/boar/boar_grey.png"));
+		texture.put(BoarVariant.TAN, ClassicHostiles.locate("textures/entity/boar/boar_tan.png"));
+	});
+
 	private boolean initialized = false;
 	private IBone head;
 	private IBone right_leg;
@@ -65,7 +71,7 @@ public class BoarModel extends AnimatedGeoModel<BoarEntity> {
 	 */
 	@Override
 	public ResourceLocation getTextureResource(BoarEntity entityIn) {
-		return BOAR_TEXTURES[entityIn.getVariant()];
+		return BOAR_TEXTURES.get(entityIn.getBoarVariant());
 	}
 
 	/**

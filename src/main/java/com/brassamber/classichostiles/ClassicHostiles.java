@@ -9,6 +9,7 @@ import com.brassamber.classichostiles.event.BearSpawnEvent;
 import com.brassamber.classichostiles.fluid.CHFluids;
 import com.brassamber.classichostiles.item.CHItems;
 import com.brassamber.classichostiles.util.CustomDispenserBehavior;
+import com.brassamber.classichostiles.world.CHMobSpawnModifiers;
 
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.common.MinecraftForge;
@@ -21,7 +22,7 @@ import software.bernie.geckolib3.GeckoLib;
 
 /**
  * @author  Xrated_junior
- * @version 1.19.2-1.0.5
+ * @version 1.19.2-1.0.7
  */
 @Mod(value = ClassicHostiles.MOD_ID)
 public class ClassicHostiles {
@@ -30,9 +31,8 @@ public class ClassicHostiles {
 	public static final Logger LOGGER = LogManager.getLogger(MOD_ID);
 
 	public ClassicHostiles() {
-		GeckoLib.initialize();
-
 		IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
+
 		CHItems.DEFERRED_ITEMS.register(modEventBus);
 		CHBlocks.DEFERRED_BLOCKS.register(modEventBus);
 		CHEntityTypes.DEFERRED_ENTITY_TYPES.register(modEventBus);
@@ -43,6 +43,10 @@ public class ClassicHostiles {
 
 		modEventBus.addListener(this::commonSetup);
 		modEventBus.addListener(this::clientSetup);
+
+		GeckoLib.initialize();
+
+		MinecraftForge.EVENT_BUS.register(this);
 	}
 
 	/*
@@ -50,6 +54,7 @@ public class ClassicHostiles {
 	 */
 	private void commonSetup(final FMLCommonSetupEvent event) {
 		MinecraftForge.EVENT_BUS.register(new BearSpawnEvent());
+		MinecraftForge.EVENT_BUS.register(new MoobloomShearEvent());
 
 		// Register behavior for Items like Arrows and Buckets when fired from a Dispenser.
 		CustomDispenserBehavior.init();

@@ -2,8 +2,11 @@ package com.brassamber.classichostiles.entity.hostile;
 
 import javax.annotation.Nullable;
 
+import com.brassamber.classichostiles.ClassicHostiles;
 import com.brassamber.classichostiles.entity.CHEntityTypes;
+import com.brassamber.classichostiles.entity.util.HasTextureVariant;
 
+import net.minecraft.Util;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
@@ -13,6 +16,7 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.util.Mth;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.AgeableMob;
@@ -46,7 +50,6 @@ import net.minecraft.world.level.ServerLevelAccessor;
 import net.minecraft.world.level.block.state.BlockState;
 import software.bernie.geckolib3.core.IAnimatable;
 import software.bernie.geckolib3.core.PlayState;
-import software.bernie.geckolib3.core.builder.AnimationBuilder;
 import software.bernie.geckolib3.core.controller.AnimationController;
 import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
 import software.bernie.geckolib3.core.manager.AnimationData;
@@ -54,11 +57,11 @@ import software.bernie.geckolib3.core.manager.AnimationFactory;
 
 /**
  * @author  Xrated_junior
- * @version 1.19.2-1.0.3
+ * @version 1.19.2-1.0.7
  */
-public class BoarEntity extends AbstractHostileAnimal implements IAnimatable {
-	private static final EntityDataAccessor<Integer> DATA_VARIANT_ID = SynchedEntityData.defineId(BoarEntity.class, EntityDataSerializers.INT);
-	private static final int VARIANTS = 4;
+public class BoarEntity extends AbstractHostileAnimal implements IAnimatable, HasTextureVariant {
+	private static final EntityDataAccessor<String> DATA_VARIANT_ID = SynchedEntityData.defineId(BoarEntity.class, EntityDataSerializers.STRING);
+	private static final String DATA_VARIANT_TAG = "Variant";
 	// TODO Should be configurable
 	private static final Ingredient FOOD_ITEMS = Ingredient.of(Items.CARROT, Items.POTATO, Items.BEETROOT);
 	private AnimationFactory factory = new AnimationFactory(this);
@@ -70,21 +73,21 @@ public class BoarEntity extends AbstractHostileAnimal implements IAnimatable {
 	/*********************************************************** Mob data ********************************************************/
 
 	@Override
+	protected void defineSynchedData() {
+		super.defineSynchedData();
+		this.entityData.define(DATA_VARIANT_ID, BoarVariant.BLACK.getName());
+	}
+
+	@Override
 	public void addAdditionalSaveData(CompoundTag compoundTag) {
 		super.addAdditionalSaveData(compoundTag);
-		compoundTag.putInt("Variant", this.getVariant());
+		compoundTag.putString(DATA_VARIANT_TAG, this.getVariant());
 	}
 
 	@Override
 	public void readAdditionalSaveData(CompoundTag compoundTag) {
 		super.readAdditionalSaveData(compoundTag);
-		this.setVariant(compoundTag.getInt("Variant"));
-	}
-
-	@Override
-	protected void defineSynchedData() {
-		super.defineSynchedData();
-		this.entityData.define(DATA_VARIANT_ID, 0);
+		this.setVariant(compoundTag.getString(DATA_VARIANT_TAG));
 	}
 
 	/*********************************************************** Goals ********************************************************/
@@ -175,11 +178,11 @@ public class BoarEntity extends AbstractHostileAnimal implements IAnimatable {
 
 	@Override
 	public SpawnGroupData finalizeSpawn(ServerLevelAccessor world, DifficultyInstance difficulty, MobSpawnType mobSpawnType, @Nullable SpawnGroupData spawnGroupData, @Nullable CompoundTag compoundTag) {
-		int variant;
+		String variant;
 		if (spawnGroupData instanceof BoarGroupData) {
 			variant = ((BoarGroupData) spawnGroupData).variant;
 		} else {
-			variant = this.random.nextInt(VARIANTS);
+			variant = BoarVariant.getRandomVariant(world.getRandom()).getName();
 			spawnGroupData = new BoarGroupData(variant);
 		}
 
@@ -204,26 +207,11 @@ public class BoarEntity extends AbstractHostileAnimal implements IAnimatable {
 		return FOOD_ITEMS.test(itemStack);
 	}
 
-	/*********************************************************** Variants ********************************************************/
-
-	public int getVariant() {
-		return Mth.clamp(this.entityData.get(DATA_VARIANT_ID), 0, VARIANTS - 1);
-	}
-
-	/**
-	 * 0: Black
-	 * 1: Brown
-	 * 2: Grey
-	 * 3: Tan
-	 */
-	public void setVariant(int variant) {
-		this.entityData.set(DATA_VARIANT_ID, variant);
-	}
-
 	/*********************************************************** Geckolib ********************************************************/
 
 	private <E extends IAnimatable> PlayState predicate(AnimationEvent<E> event) {
-		event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.boar.idle", true));
+		// DELETED
+		//		event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.boar.idle", true));
 		return PlayState.CONTINUE;
 	}
 
@@ -259,15 +247,68 @@ public class BoarEntity extends AbstractHostileAnimal implements IAnimatable {
 		this.playSound(SoundEvents.PIG_STEP, 0.15F, 1.0F);
 	}
 
+	/*********************************************************** Variants ********************************************************/
+
+	public BoarVariant getBoarVariant() {
+		return BoarVariant.getByName(this.entityData.get(DATA_VARIANT_ID));
+	}
+
+	@Override
+	public String getVariant() {
+		return this.getBoarVariant().getName();
+	}
+
+	public void setBoarVariant(BoarVariant variant) {
+		this.setVariant(variant.getName());
+	}
+
+	@Override
+	public void setVariant(String variantName) {
+		this.entityData.set(DATA_VARIANT_ID, variantName);
+	}
+
+	public static enum BoarVariant {
+		BLACK("black"),
+		BROWN("brown"),
+		GREY("grey"),
+		TAN("tan");
+
+		final String variantName;
+
+		private static final BoarVariant[] ALL_VARIANTS = values();
+
+		private BoarVariant(String name) {
+			this.variantName = name;
+		}
+
+		public String getName() {
+			return this.variantName;
+		}
+
+		public static BoarVariant getRandomVariant(RandomSource random) {
+			return Util.getRandom(ALL_VARIANTS, random);
+		}
+
+		static BoarVariant getByName(String name) {
+			for (BoarVariant boarVariant : ALL_VARIANTS) {
+				if (boarVariant.getName().equals(name)) {
+					return boarVariant;
+				}
+			}
+			ClassicHostiles.LOGGER.error("Couldn't find Boar variant for: {}.", name);
+			return BLACK;
+		}
+	}
+
 	/*********************************************************** Extra Classes ********************************************************/
 
 	/**
 	 * Referenced from {@link Llama}
 	 */
 	static class BoarGroupData extends AgeableMob.AgeableMobGroupData {
-		public final int variant;
+		public final String variant;
 
-		BoarGroupData(int variant) {
+		BoarGroupData(String variant) {
 			super(true);
 			this.variant = variant;
 		}

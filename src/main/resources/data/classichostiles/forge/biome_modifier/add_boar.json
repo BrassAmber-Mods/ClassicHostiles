@@ -1,0 +1,10 @@
+{
+  "type" : "forge:add_spawns",
+  "biomes" : "#classichostiles:spawns_boars",
+  "spawn" : {
+    "type" : "classichostiles:boar",
+    "weight" : 10,
+    "minCount" : 2,
+    "maxCount" : 4
+  }
+}

@@ -3,6 +3,7 @@ package com.brassamber.classichostiles.entity.passive;
 import javax.annotation.Nullable;
 
 import com.brassamber.classichostiles.ClassicHostiles;
+import com.brassamber.classichostiles.entity.util.HasTextureVariant;
 import com.brassamber.classichostiles.item.CHItems;
 
 import net.minecraft.Util;
@@ -49,16 +50,16 @@ import net.minecraftforge.common.Tags;
  * Referenced from {@link MushroomCow}
  * 
  * @author  Xrated_junior
- * @version 1.19.2-1.0.6
+ * @version 1.19.2-1.0.7
  */
 @SuppressWarnings("deprecation")
-public class MoobloomEntity extends Cow implements Shearable, IForgeShearable {
-	private static final EntityDataAccessor<String> DATA_TYPE_ID = SynchedEntityData.defineId(MoobloomEntity.class, EntityDataSerializers.STRING);
+public class MoobloomEntity extends Cow implements Shearable, IForgeShearable, HasTextureVariant {
+	private static final EntityDataAccessor<String> DATA_VARIANT_ID = SynchedEntityData.defineId(MoobloomEntity.class, EntityDataSerializers.STRING);
 	private static final EntityDataAccessor<Integer> DATA_FLOWER_GROW_ID = SynchedEntityData.defineId(MoobloomEntity.class, EntityDataSerializers.INT);
 	private static final EntityDataAccessor<Integer> DATA_MILKING_ID = SynchedEntityData.defineId(MoobloomEntity.class, EntityDataSerializers.INT);
 	private static final EntityDataAccessor<Integer> DATA_FLORAL_FLUID_ID = SynchedEntityData.defineId(MoobloomEntity.class, EntityDataSerializers.INT);
 	private static final EntityDataAccessor<Integer> DATA_CONVERTING_ID = SynchedEntityData.defineId(MoobloomEntity.class, EntityDataSerializers.INT);
-	private static final String DATA_TYPE_TAG = "Type";
+	private static final String DATA_VARIANT_TAG = "Variant";
 	private static final String DATA_FLOWER_GROW_TAG = "FlowerGrowTime";
 	private static final String DATA_MILKING_TAG = "MilkingInterval";
 	private static final String DATA_FLORAL_FLUID_TAG = "FloralFluid";
@@ -73,7 +74,7 @@ public class MoobloomEntity extends Cow implements Shearable, IForgeShearable {
 	@Override
 	protected void defineSynchedData() {
 		super.defineSynchedData();
-		this.entityData.define(DATA_TYPE_ID, FlowerType.DANDELION.getName());
+		this.entityData.define(DATA_VARIANT_ID, MoobloomVariant.DANDELION.getName());
 		this.entityData.define(DATA_FLOWER_GROW_ID, 0);
 		this.entityData.define(DATA_MILKING_ID, 0);
 		this.entityData.define(DATA_FLORAL_FLUID_ID, 0);
@@ -83,7 +84,7 @@ public class MoobloomEntity extends Cow implements Shearable, IForgeShearable {
 	@Override
 	public void addAdditionalSaveData(CompoundTag compoundTag) {
 		super.addAdditionalSaveData(compoundTag);
-		compoundTag.putString(DATA_TYPE_TAG, this.getMoobloomType().getName());
+		compoundTag.putString(DATA_VARIANT_TAG, this.getMoobloomVariant().getName());
 		compoundTag.putInt(DATA_FLOWER_GROW_TAG, this.getShearInterval());
 		compoundTag.putInt(DATA_MILKING_TAG, this.getMilkInterval());
 		compoundTag.putInt(DATA_FLORAL_FLUID_TAG, this.getRemainingFloralFluidTime());
@@ -93,7 +94,7 @@ public class MoobloomEntity extends Cow implements Shearable, IForgeShearable {
 	@Override
 	public void readAdditionalSaveData(CompoundTag compoundTag) {
 		super.readAdditionalSaveData(compoundTag);
-		this.setMoobloomType(FlowerType.getByName(compoundTag.getString(DATA_TYPE_TAG)));
+		this.setMoobloomVariant(MoobloomVariant.getByName(compoundTag.getString(DATA_VARIANT_TAG)));
 		this.setShearInterval(compoundTag.getInt(DATA_FLOWER_GROW_TAG));
 		this.setMilkInterval(compoundTag.getInt(DATA_MILKING_TAG));
 		this.setRemainingFloralFluidTime(compoundTag.getInt(DATA_FLORAL_FLUID_TAG));
@@ -133,7 +134,7 @@ public class MoobloomEntity extends Cow implements Shearable, IForgeShearable {
 
 				//				ClassicHostiles.LOGGER.info(this.isConverting());
 
-				// Keep track of time needed to convert Moobloom types
+				// Keep track of time needed to convert Moobloom variants
 				if (this.isConverting()) {
 					int timeReduction = this.getConversionReduction();
 					this.setConvertionTime(this.getConvertionTime() - timeReduction);
@@ -184,7 +185,7 @@ public class MoobloomEntity extends Cow implements Shearable, IForgeShearable {
 	//TODO Fix subtitles
 	private void finishConversion(ServerLevel serverLevel) {
 		((ServerLevel) this.level).sendParticles(ParticleTypes.EXPLOSION, this.getX(), this.getY(0.5D), this.getZ(), 1, 0.0D, 0.0D, 0.0D, 0.0D);
-		this.setMoobloomType(FlowerType.getRandomType(this.random));
+		this.setMoobloomVariant(MoobloomVariant.getRandomVariant(this.random));
 		this.playSound(SoundEvents.ZOMBIE_VILLAGER_CONVERTED);
 	}
 
@@ -212,7 +213,7 @@ public class MoobloomEntity extends Cow implements Shearable, IForgeShearable {
 
 	@Override
 	public boolean readyForShearing() {
-		return this.isAlive() && !this.isBaby() && !this.isSheared();
+		return this.isAlive() && !this.isBaby() && !this.isSheared() && !this.getMoobloomVariant().equals(MoobloomVariant.TILLED);
 	}
 
 	/*********************************************************** Shear Interaction ********************************************************/
@@ -228,7 +229,7 @@ public class MoobloomEntity extends Cow implements Shearable, IForgeShearable {
 
 			java.util.List<ItemStack> droppedItemStacks = new java.util.ArrayList<>();
 			for (int dropCount = 0; dropCount < dropAmount; ++dropCount) {
-				droppedItemStacks.add(new ItemStack(this.getMoobloomType().getFlowerBlock()));
+				droppedItemStacks.add(new ItemStack(this.getMoobloomVariant().getFlowerBlock()));
 			}
 			return droppedItemStacks;
 		}
@@ -242,20 +243,20 @@ public class MoobloomEntity extends Cow implements Shearable, IForgeShearable {
 		ItemStack itemStackInHand = player.getItemInHand(hand);
 
 		// Convert to tilled Moobloom after interaction with a hoe
-		if (itemStackInHand.is(Tags.Items.TOOLS_HOES) && !this.isBaby() && !this.getMoobloomType().equals(FlowerType.TILLED)) {
+		if (itemStackInHand.is(Tags.Items.TOOLS_HOES) && !this.isBaby() && !this.getMoobloomVariant().equals(MoobloomVariant.TILLED)) {
 			this.playSound(SoundEvents.HOE_TILL);
 			this.addParticlesAroundSelf(ParticleTypes.CRIMSON_SPORE);
 			this.addParticlesAroundSelf(ParticleTypes.POOF, 1);
 			this.addParticlesAroundSelf(ParticleTypes.WARPED_SPORE);
 			if (!this.getLevel().isClientSide()) {
-				this.setMoobloomType(FlowerType.TILLED);
+				this.setMoobloomVariant(MoobloomVariant.TILLED);
 			}
 			return InteractionResult.sidedSuccess(this.getLevel().isClientSide());
 		}
 
 		// Right-clicking with an empty bucket gives the player a Floral Fluid Bucket
 		else if (itemStackInHand.getItem().equals(Items.BUCKET)) {
-			if (!this.isBaby() && !this.getMoobloomType().equals(FlowerType.TILLED) && this.canBeMilked()) {
+			if (!this.isBaby() && !this.getMoobloomVariant().equals(MoobloomVariant.TILLED) && this.canBeMilked()) {
 				this.playSound(SoundEvents.COW_MILK);
 				// Set interval to 10 minutes
 				this.setMilkInterval(12_000);
@@ -271,7 +272,7 @@ public class MoobloomEntity extends Cow implements Shearable, IForgeShearable {
 		}
 
 		// Convert to flowering Moobloom after interaction with a Floral Fluid Bucket
-		else if (itemStackInHand.getItem().equals(CHItems.FLORAL_FLUID_BUCKET.get()) && this.getMoobloomType().equals(FlowerType.TILLED)) {
+		else if (itemStackInHand.getItem().equals(CHItems.FLORAL_FLUID_BUCKET.get()) && this.getMoobloomVariant().equals(MoobloomVariant.TILLED)) {
 			this.playSound(SoundEvents.HONEY_DRINK);
 			this.addParticlesAroundSelf(ParticleTypes.AMBIENT_ENTITY_EFFECT);
 			// Is effective for 1 minute
@@ -279,7 +280,7 @@ public class MoobloomEntity extends Cow implements Shearable, IForgeShearable {
 			return InteractionResult.sidedSuccess(this.getLevel().isClientSide());
 		}
 
-		else if (itemStackInHand.getItem().equals(Items.WHEAT_SEEDS) && this.getMoobloomType().equals(FlowerType.TILLED) && this.hasConsumedFloralFluid()) {
+		else if (itemStackInHand.getItem().equals(Items.WHEAT_SEEDS) && this.getMoobloomVariant().equals(MoobloomVariant.TILLED) && this.hasConsumedFloralFluid()) {
 			this.playSound(SoundEvents.CROP_PLANTED);
 			this.addParticlesAroundSelf(ParticleTypes.HAPPY_VILLAGER);
 
@@ -288,7 +289,7 @@ public class MoobloomEntity extends Cow implements Shearable, IForgeShearable {
 				itemStackInHand.shrink(1);
 			}
 
-			// Start converting Moobloom type
+			// Start converting Moobloom variant
 			if (!this.getLevel().isClientSide()) {
 				// Conversion time is 2 minutes +/- 1 minute
 				this.startConverting(2400 + this.random.nextInt(1200));
@@ -321,7 +322,7 @@ public class MoobloomEntity extends Cow implements Shearable, IForgeShearable {
 		if (this.isSheared()) {
 			return this.getType().getDefaultLootTable();
 		} else {
-			switch (this.getMoobloomType()) {
+			switch (this.getMoobloomVariant()) {
 			default:
 				return super.getDefaultLootTable();
 			//			case DANDELION:
@@ -364,7 +365,7 @@ public class MoobloomEntity extends Cow implements Shearable, IForgeShearable {
 
 	@Override
 	public SpawnGroupData finalizeSpawn(ServerLevelAccessor world, DifficultyInstance difficulty, MobSpawnType mobSpawnType, @Nullable SpawnGroupData spawnGroupData, @Nullable CompoundTag compoundTag) {
-		this.setMoobloomType(FlowerType.getRandomType(this.random));
+		this.setMoobloomVariant(MoobloomVariant.getRandomVariant(world.getRandom()));
 		return super.finalizeSpawn(world, difficulty, mobSpawnType, spawnGroupData, compoundTag);
 	}
 
@@ -412,7 +413,7 @@ public class MoobloomEntity extends Cow implements Shearable, IForgeShearable {
 		return this.getShearInterval() > 0;
 	}
 
-	/*********************************************************** Moobloom type conversion data ********************************************************/
+	/*********************************************************** Moobloom variant conversion data ********************************************************/
 
 	public void setConvertionTime(int conversionTime) {
 		this.entityData.set(DATA_CONVERTING_ID, conversionTime);
@@ -438,17 +439,27 @@ public class MoobloomEntity extends Cow implements Shearable, IForgeShearable {
 		return this.getRemainingFloralFluidTime() > 0;
 	}
 
-	/*********************************************************** Moobloom type data ********************************************************/
+	/*********************************************************** Moobloom variant data ********************************************************/
 
-	public FlowerType getMoobloomType() {
-		return FlowerType.getByName(this.entityData.get(DATA_TYPE_ID));
+	public MoobloomVariant getMoobloomVariant() {
+		return MoobloomVariant.getByName(this.entityData.get(DATA_VARIANT_ID));
 	}
 
-	public void setMoobloomType(FlowerType type) {
-		this.entityData.set(DATA_TYPE_ID, type.getName());
+	public void setMoobloomVariant(MoobloomVariant variant) {
+		this.setVariant(variant.getName());
 	}
 
-	public static enum FlowerType {
+	@Override
+	public String getVariant() {
+		return this.getMoobloomVariant().getName();
+	}
+
+	@Override
+	public void setVariant(String variant) {
+		this.entityData.set(DATA_VARIANT_ID, variant);
+	}
+
+	public static enum MoobloomVariant {
 		// Small flowers
 		DANDELION("dandelion", Blocks.DANDELION),
 		POPPY("poppy", Blocks.POPPY),
@@ -470,55 +481,55 @@ public class MoobloomEntity extends Cow implements Shearable, IForgeShearable {
 		// No flowers
 		TILLED("tilled", Blocks.AIR);
 
-		final String typeName;
+		final String variantName;
 		final Block flowerBlock;
 
-		private static final FlowerType[] ALL_TYPES = values();
+		private static final MoobloomVariant[] ALL_VARIANTS = values();
 
-		private FlowerType(String name, Block blockState) {
-			this.typeName = name;
+		private MoobloomVariant(String name, Block blockState) {
+			this.variantName = name;
 			this.flowerBlock = blockState;
 		}
 
 		public String getName() {
-			return this.typeName;
+			return this.variantName;
 		}
 
 		public Block getFlowerBlock() {
 			return this.flowerBlock;
 		}
 
-		public static FlowerType getRandomType(RandomSource random) {
-			FlowerType randomFlowerType = Util.getRandom(ALL_TYPES, random);
-			if (randomFlowerType.equals(FlowerType.TILLED)) {
-				return getRandomType(random);
+		public static MoobloomVariant getRandomVariant(RandomSource random) {
+			MoobloomVariant randomMoobloomVariant = Util.getRandom(ALL_VARIANTS, random);
+			if (randomMoobloomVariant.equals(MoobloomVariant.TILLED)) {
+				return getRandomVariant(random);
 			}
-			return randomFlowerType;
+			return randomMoobloomVariant;
 		}
 
-		static FlowerType getByName(String name) {
-			for (FlowerType moobloomFlowerType : ALL_TYPES) {
-				if (moobloomFlowerType.getName().equals(name)) {
-					return moobloomFlowerType;
+		static MoobloomVariant getByName(String name) {
+			for (MoobloomVariant moobloomVariant : ALL_VARIANTS) {
+				if (moobloomVariant.getName().equals(name)) {
+					return moobloomVariant;
 				}
 			}
-			ClassicHostiles.LOGGER.error("Couldn't find Moobloom type for: {}.", name);
+			ClassicHostiles.LOGGER.error("Couldn't find Moobloom variant for: {}.", name);
 			return TILLED;
 		}
 
-		static FlowerType getByItem(Item item) {
-			for (FlowerType moobloomFlowerType : ALL_TYPES) {
-				if (moobloomFlowerType.getFlowerBlock().asItem().equals(item)) {
-					return moobloomFlowerType;
+		static MoobloomVariant getByItem(Item item) {
+			for (MoobloomVariant moobloomVariant : ALL_VARIANTS) {
+				if (moobloomVariant.getFlowerBlock().asItem().equals(item)) {
+					return moobloomVariant;
 				}
 			}
-			ClassicHostiles.LOGGER.error("Couldn't find Moobloom type for: {}.", item.toString());
+			ClassicHostiles.LOGGER.error("Couldn't find Moobloom variant for: {}.", item.toString());
 			return TILLED;
 		}
 
 		static boolean canAcceptFlower(Item item) {
-			for (FlowerType moobloomFlowerType : ALL_TYPES) {
-				if (moobloomFlowerType.getFlowerBlock().asItem().equals(item)) {
+			for (MoobloomVariant moobloomVariant : ALL_VARIANTS) {
+				if (moobloomVariant.getFlowerBlock().asItem().equals(item)) {
 					return true;
 				}
 			}

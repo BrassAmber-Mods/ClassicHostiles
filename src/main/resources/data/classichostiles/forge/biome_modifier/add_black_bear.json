@@ -1,0 +1,11 @@
+{
+  "type" : "classichostiles:add_spawn_variant",
+  "biomes" : "#classichostiles:spawns_black_bears",
+  "spawn" : {
+    "type" : "classichostiles:bear",
+    "variant" : "black",
+    "weight" : 10,
+    "minCount" : 1,
+    "maxCount" : 2
+  }
+}

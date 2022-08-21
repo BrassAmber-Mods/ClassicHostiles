@@ -80,7 +80,7 @@
           "condition": "minecraft:entity_properties",
           "entity": "this",
           "predicate": {
-            "nbt": "{Variant:0}"
+            "nbt": "{Variant:black}"
           }
         }
       ]
@@ -114,7 +114,7 @@
           "condition": "minecraft:entity_properties",
           "entity": "this",
           "predicate": {
-            "nbt": "{Variant:1}"
+            "nbt": "{Variant:brown}"
           }
         }
       ]

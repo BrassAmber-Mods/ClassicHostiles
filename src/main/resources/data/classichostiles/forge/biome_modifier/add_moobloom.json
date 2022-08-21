@@ -1,0 +1,10 @@
+{
+  "type" : "forge:add_spawns",
+  "biomes" : "#classichostiles:spawns_mooblooms",
+  "spawn" : {
+    "type" : "classichostiles:moobloom",
+    "weight" : 10,
+    "minCount" : 1,
+    "maxCount" : 4
+  }
+}

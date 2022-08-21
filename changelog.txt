@@ -1,6 +1,17 @@
 1.19.x Changelog
 1.0.0
 ====
+ - 1.0.7
+	Added Mob spawning
+	Created Biome Tags for Mob spawning
+	Fixed NBT consistency between all Mob variants in Classic Hostiles
+	    * All variants should now be registered in the same way
+	Fixed shearing animation when Moobloom couldn't be sheared
+ - 1.0.6
+	Added Moobloom
+	Deleted remaining logger in Polar Bear Spawn Egg tool tip
+	Increased Floral Fluid tick rate
+	Replaced Floral Fluid Bucket texture
  - 1.0.5
 	Added Floral Fluid
 	Added Floral Fluid Bucket

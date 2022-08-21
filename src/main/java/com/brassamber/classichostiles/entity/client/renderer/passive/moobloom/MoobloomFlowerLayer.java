@@ -25,7 +25,7 @@ import net.minecraftforge.api.distmarker.OnlyIn;
  * Referenced from {@link MushroomCowMushroomLayer}
  * 
  * @author  Xrated_junior
- * @version 1.19.2-1.0.6
+ * @version 1.19.2-1.0.7
  */
 @OnlyIn(value = Dist.CLIENT)
 public class MoobloomFlowerLayer<E extends MoobloomEntity> extends RenderLayer<E, CowModel<E>> {
@@ -45,7 +45,7 @@ public class MoobloomFlowerLayer<E extends MoobloomEntity> extends RenderLayer<E
 			Minecraft minecraft = Minecraft.getInstance();
 			boolean isGlowingOrInvisible = minecraft.shouldEntityAppearGlowing(moobloomEntity) && moobloomEntity.isInvisible();
 			if (!moobloomEntity.isInvisible() || isGlowingOrInvisible) {
-				BlockState blockstate = moobloomEntity.getMoobloomType().getFlowerBlock().defaultBlockState();
+				BlockState blockstate = moobloomEntity.getMoobloomVariant().getFlowerBlock().defaultBlockState();
 				int overlayCoords = LivingEntityRenderer.getOverlayCoords(moobloomEntity, 0.0F);
 				BakedModel bakedmodel = this.blockRenderer.getBlockModel(blockstate);
 				float scale = 0.8F;
