@@ -1,6 +1,8 @@
 {
   "values": [
     "minecraft:plains",
+     "minecraft:taiga",
+     "minecraft:mountains",
     "#minecraft:is_forest",
     {
       "id": "#forge:is_coniferous",
