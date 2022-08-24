@@ -1,10 +1,6 @@
 {
   "values": [
-    "minecraft:plains",
-    "#minecraft:is_forest",
-    {
-      "id": "#forge:is_coniferous",
-      "required": false
-    }
+    "minecraft:flower_forest",
+    "minecraft:meadow"
   ]
 }

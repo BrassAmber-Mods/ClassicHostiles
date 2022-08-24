@@ -1,7 +1,7 @@
 {
   "type" : "forge:add_spawns",
   "biomes" : "#classichostiles:spawns_plains_foxes",
-  "spawn" : {
+  "spawners" : {
     "type" : "classichostiles:fox",
     "weight" : 10,
     "minCount" : 2,

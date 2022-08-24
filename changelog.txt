@@ -1,6 +1,9 @@
 1.19.x Changelog
 1.0.0
 ====
+ - 1.0.8
+	Tweak Spawn Biomes
+	Fix Mob Spawning
  - 1.0.7
 	Added Mob spawning
 	Created Biome Tags for Mob spawning

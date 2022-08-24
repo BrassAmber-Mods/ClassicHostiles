@@ -1,12 +1,7 @@
 {
   "values": [
-     "minecraft:taiga",
-       "minecraft:forest",
-       "minecraft:birch_forest",
     "#minecraft:is_forest",
-    {
-      "id": "#forge:is_coniferous",
-      "required": false
-    }
+    "#minecraft:is_taiga",
+    "#minecraft:is_jungle"
   ]
 }

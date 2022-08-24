@@ -1,9 +1,11 @@
 {
   "values": [
-    "minecraft:plains",
-    "#minecraft:is_forest",
     {
-      "id": "#forge:is_coniferous",
+      "id": "#forge:is_plains",
+      "required": false
+    },
+    {
+      "id": "#forge:is_sandy",
       "required": false
     }
   ]
