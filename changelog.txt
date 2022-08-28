@@ -1,6 +1,9 @@
 1.19.x Changelog
 1.0.0
 ====
+ - 1.0.9
+	Add Moobloom loot tables
+	Tweak Bear loot tables
  - 1.0.8
 	Tweak Spawn Biomes
 	Fix Mob Spawning

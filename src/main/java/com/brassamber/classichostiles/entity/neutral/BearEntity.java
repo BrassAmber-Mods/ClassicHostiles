@@ -38,7 +38,7 @@ import net.minecraft.world.level.biome.MobSpawnSettings.SpawnerData;
  * TODO Fix sound subtitles
  * 
  * @author  Xrated_junior
- * @version 1.19.2-1.0.7
+ * @version 1.19.2-1.0.9
  */
 public class BearEntity extends PolarBear implements HasTextureVariant {
 	private static final EntityDataAccessor<String> DATA_VARIANT_ID = SynchedEntityData.defineId(BearEntity.class, EntityDataSerializers.STRING);
@@ -48,12 +48,15 @@ public class BearEntity extends PolarBear implements HasTextureVariant {
 		super(bearEntity, level);
 	}
 
-	/**
-	 * TODO Create loot_tables
-	 */
 	@Override
 	public ResourceLocation getDefaultLootTable() {
-		return super.getDefaultLootTable();
+		switch (this.getBearVariant()) {
+		default:
+		case BLACK:
+			return ClassicHostiles.locate("entities/bear_black");
+		case BROWN:
+			return ClassicHostiles.locate("entities/bear_brown");
+		}
 	}
 
 	/*********************************************************** Mob data ********************************************************/
@@ -180,7 +183,7 @@ public class BearEntity extends PolarBear implements HasTextureVariant {
 
 		static BearVariant getByName(String name) {
 			for (BearVariant bearVariant : ALL_VARIANTS) {
-				if (bearVariant.getName().equals(name)) {
+				if (bearVariant.getName().equals(name.toLowerCase())) {
 					return bearVariant;
 				}
 			}

@@ -50,7 +50,7 @@ import net.minecraftforge.common.Tags;
  * Referenced from {@link MushroomCow}
  * 
  * @author  Xrated_junior
- * @version 1.19.2-1.0.7
+ * @version 1.19.2-1.0.9
  */
 @SuppressWarnings("deprecation")
 public class MoobloomEntity extends Cow implements Shearable, IForgeShearable, HasTextureVariant {
@@ -316,7 +316,6 @@ public class MoobloomEntity extends Cow implements Shearable, IForgeShearable, H
 
 	/*********************************************************** Loot table ********************************************************/
 
-	//TODO
 	@Override
 	public ResourceLocation getDefaultLootTable() {
 		if (this.isSheared()) {
@@ -324,39 +323,40 @@ public class MoobloomEntity extends Cow implements Shearable, IForgeShearable, H
 		} else {
 			switch (this.getMoobloomVariant()) {
 			default:
+			case TILLED:
 				return super.getDefaultLootTable();
-			//			case DANDELION:
-			//				               return BuiltInLootTables.SHEEP_WHITE;
-			//	            case ORANGE:
-			//	               return BuiltInLootTables.SHEEP_ORANGE;
-			//	            case MAGENTA:
-			//	               return BuiltInLootTables.SHEEP_MAGENTA;
-			//	            case LIGHT_BLUE:
-			//	               return BuiltInLootTables.SHEEP_LIGHT_BLUE;
-			//	            case YELLOW:
-			//	               return BuiltInLootTables.SHEEP_YELLOW;
-			//	            case LIME:
-			//	               return BuiltInLootTables.SHEEP_LIME;
-			//	            case PINK:
-			//	               return BuiltInLootTables.SHEEP_PINK;
-			//	            case GRAY:
-			//	               return BuiltInLootTables.SHEEP_GRAY;
-			//	            case LIGHT_GRAY:
-			//	               return BuiltInLootTables.SHEEP_LIGHT_GRAY;
-			//	            case CYAN:
-			//	               return BuiltInLootTables.SHEEP_CYAN;
-			//	            case PURPLE:
-			//	               return BuiltInLootTables.SHEEP_PURPLE;
-			//	            case BLUE:
-			//	               return BuiltInLootTables.SHEEP_BLUE;
-			//	            case BROWN:
-			//	               return BuiltInLootTables.SHEEP_BROWN;
-			//	            case GREEN:
-			//	               return BuiltInLootTables.SHEEP_GREEN;
-			//	            case RED:
-			//	               return BuiltInLootTables.SHEEP_RED;
-			//	            case BLACK:
-			//	               return BuiltInLootTables.SHEEP_BLACK;
+			case DANDELION:
+				return ClassicHostiles.locate("entities/moobloom/dandelion");
+			case POPPY:
+				return ClassicHostiles.locate("entities/moobloom/poppy");
+			case BLUE_ORCHID:
+				return ClassicHostiles.locate("entities/moobloom/blue_orchid");
+			case ALLIUM:
+				return ClassicHostiles.locate("entities/moobloom/allium");
+			case AZURE_BLUET:
+				return ClassicHostiles.locate("entities/moobloom/azure_bluet");
+			case RED_TULIP:
+				return ClassicHostiles.locate("entities/moobloom/red_tulip");
+			case ORANGE_TULIP:
+				return ClassicHostiles.locate("entities/moobloom/orange_tulip");
+			case WHITE_TULIP:
+				return ClassicHostiles.locate("entities/moobloom/white_tulip");
+			case PINK_TULIP:
+				return ClassicHostiles.locate("entities/moobloom/pink_tulip");
+			case OXEYE_DAISY:
+				return ClassicHostiles.locate("entities/moobloom/oxeye_daisy");
+			case CORNFLOWER:
+				return ClassicHostiles.locate("entities/moobloom/cornflower");
+			case LILY_OF_THE_VALLEY:
+				return ClassicHostiles.locate("entities/moobloom/lily_of_the_valley");
+			case SUNFLOWER:
+				return ClassicHostiles.locate("entities/moobloom/sunflower");
+			case LILAC:
+				return ClassicHostiles.locate("entities/moobloom/lilac");
+			case ROSE_BUSH:
+				return ClassicHostiles.locate("entities/moobloom/rose_bush");
+			case PEONY:
+				return ClassicHostiles.locate("entities/moobloom/peony");
 			}
 		}
 	}
@@ -456,7 +456,7 @@ public class MoobloomEntity extends Cow implements Shearable, IForgeShearable, H
 
 	@Override
 	public void setVariant(String variant) {
-		this.entityData.set(DATA_VARIANT_ID, variant);
+		this.entityData.set(DATA_VARIANT_ID, variant.toLowerCase());
 	}
 
 	public static enum MoobloomVariant {
@@ -509,7 +509,7 @@ public class MoobloomEntity extends Cow implements Shearable, IForgeShearable, H
 
 		static MoobloomVariant getByName(String name) {
 			for (MoobloomVariant moobloomVariant : ALL_VARIANTS) {
-				if (moobloomVariant.getName().equals(name)) {
+				if (moobloomVariant.getName().equals(name.toLowerCase())) {
 					return moobloomVariant;
 				}
 			}
