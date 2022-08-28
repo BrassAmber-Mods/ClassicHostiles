@@ -29,7 +29,7 @@ import net.minecraftforge.registries.RegistryObject;
 
 /**
  * @author  Xrated_junior
- * @version 1.19.2-1.0.6
+ * @version 1.19.2-1.0.10
  */
 @Mod.EventBusSubscriber(modid = ClassicHostiles.MOD_ID, bus = Bus.MOD)
 public class CHEntityTypes {
@@ -37,19 +37,17 @@ public class CHEntityTypes {
 
 	/*********************************************************** Hostile ********************************************************/
 
-	// TODO Spawn egg: brown and black
-	public static final RegistryObject<EntityType<BoarEntity>> BOAR = registerEntityType("boar", 0x573a1b, 0x363636, EntityType.Builder.of(BoarEntity::new, MobCategory.CREATURE).sized(0.9F, 0.9F).clientTrackingRange(10));
+	public static final RegistryObject<EntityType<BoarEntity>> BOAR = registerEntityType("boar", 0x674D31, 0x363636, EntityType.Builder.of(BoarEntity::new, MobCategory.CREATURE).sized(0.9F, 0.9F).clientTrackingRange(10));
 
 	/*********************************************************** Neutral ********************************************************/
 
 	// TODO Immunity Blocks should be BlockTags instead for more configuration options
-	public static final RegistryObject<EntityType<PlainsFoxEntity>> PLAINS_FOX = registerEntityType("fox", 0x573a1b, 0x363636, EntityType.Builder.of(PlainsFoxEntity::new, MobCategory.CREATURE).sized(0.6F, 0.7F).clientTrackingRange(8).immuneTo(Blocks.SWEET_BERRY_BUSH));
+	public static final RegistryObject<EntityType<PlainsFoxEntity>> PLAINS_FOX = registerEntityType("fox", EntityType.Builder.of(PlainsFoxEntity::new, MobCategory.CREATURE).sized(0.6F, 0.7F).clientTrackingRange(8).immuneTo(Blocks.SWEET_BERRY_BUSH));
 	public static final RegistryObject<EntityType<BearEntity>> BEAR = registerEntityType("bear", EntityType.Builder.of(BearEntity::new, MobCategory.CREATURE).immuneTo(Blocks.SWEET_BERRY_BUSH).sized(1.4F, 1.4F).clientTrackingRange(10));
 
 	/*********************************************************** Passive ********************************************************/
 
-	// TODO Spawn Egg: yellow and white
-	public static final RegistryObject<EntityType<MoobloomEntity>> MOOBLOOM = registerEntityType("moobloom", 0x573a1b, 0x363636, EntityType.Builder.of(MoobloomEntity::new, MobCategory.CREATURE).sized(0.9F, 1.4F).clientTrackingRange(10));
+	public static final RegistryObject<EntityType<MoobloomEntity>> MOOBLOOM = registerEntityType("moobloom", 0xFFFF00, 0xFFFFFF, EntityType.Builder.of(MoobloomEntity::new, MobCategory.CREATURE).sized(0.9F, 1.4F).clientTrackingRange(10));
 
 	/**
 	 * register entity spawn placement and build attributes
@@ -78,9 +76,9 @@ public class CHEntityTypes {
 		// Passive
 		event.put(MOOBLOOM.get(), Cow.createAttributes().build());
 	}
-	
+
 	/*********************************************************** Helper methods ********************************************************/
-	
+
 	/**
 	 * Helper method for registering Mob EntityTypes
 	 */

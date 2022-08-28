@@ -1,6 +1,11 @@
 1.19.x Changelog
 1.0.0
 ====
+ - 1.0.10
+	Tweak Spawn Egg colors
+	Removed Plains Fox Spawn Egg
+	Tweak Polar Bear replacement
+	Add Vanilla Fox replacement
  - 1.0.9
 	Add Moobloom loot tables
 	Tweak Bear loot tables
