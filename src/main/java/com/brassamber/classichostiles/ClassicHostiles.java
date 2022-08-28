@@ -5,7 +5,7 @@ import org.apache.logging.log4j.Logger;
 
 import com.brassamber.classichostiles.block.CHBlocks;
 import com.brassamber.classichostiles.entity.CHEntityTypes;
-import com.brassamber.classichostiles.event.BearSpawnEvent;
+import com.brassamber.classichostiles.event.CHSpawnEvents;
 import com.brassamber.classichostiles.event.MoobloomShearEvent;
 import com.brassamber.classichostiles.fluid.CHFluids;
 import com.brassamber.classichostiles.item.CHItems;
@@ -54,7 +54,7 @@ public class ClassicHostiles {
 	 * Will run at launch (preInit)
 	 */
 	private void commonSetup(final FMLCommonSetupEvent event) {
-		MinecraftForge.EVENT_BUS.register(new BearSpawnEvent());
+		MinecraftForge.EVENT_BUS.register(new CHSpawnEvents());
 		MinecraftForge.EVENT_BUS.register(new MoobloomShearEvent());
 
 		// Register behavior for Items like Arrows and Buckets when fired from a Dispenser.
