@@ -1,8 +1,20 @@
-plugins {
-    id 'eclipse'
-    id 'maven-publish'
-    id 'net.minecraftforge.gradle' version '5.1.+'
+buildscript {
+    repositories {
+        maven { url = 'https://maven.minecraftforge.net' }
+        mavenCentral()
+    }
+    dependencies {
+        classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '5.1.+', changing: true
+        // MixinGradle:
+        classpath 'org.spongepowered:mixingradle:0.7.+'
+    }
 }
+apply plugin: 'net.minecraftforge.gradle'
+// Only edit below this line, the above code adds and enables the necessary things for Forge to be setup.
+apply plugin: 'eclipse'
+apply plugin: 'maven-publish'
+// MixinGradle:
+apply plugin: 'org.spongepowered.mixin'
 
 version = "1.19.2-$modVersion"
 group = 'com.brassamber.classichostiles'
@@ -73,6 +85,18 @@ minecraft {
     }
 }
 
+mixin {
+    // Refmaps for each SourceSet
+    add sourceSets.main, 'mixins.classichostiles.refmap.json'
+    
+    // Configs to add to runs and jars
+    config 'mixins.classichostiles.json'
+    
+    // Specify options for dev run configs
+    debug.verbose = true
+    debug.export = true
+}
+
 sourceSets.main.resources { srcDir 'src/generated/resources' }
 
 repositories {
@@ -84,6 +108,9 @@ dependencies {
     minecraft 'net.minecraftforge:forge:1.19.2-43.0.8'
     // Geckolib installation
     implementation fg.deobf('software.bernie.geckolib:geckolib-forge-1.19:3.1.16')
+    
+    // Apply Mixin AP
+    annotationProcessor 'org.spongepowered:mixin:0.8.5:processor'
 }
 
 jar {

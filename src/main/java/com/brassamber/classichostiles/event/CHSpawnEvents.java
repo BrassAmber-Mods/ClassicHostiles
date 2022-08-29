@@ -24,7 +24,7 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 public class CHSpawnEvents {
 
 	@SubscribeEvent
-	public void onEntityJoinWorld(final LivingSpawnEvent.SpecialSpawn event) {
+	public void replaceVanillaMobsEvent(final LivingSpawnEvent.SpecialSpawn event) {
 		Mob mobEntity = event.getEntity();
 
 		// Replace Polar Bears with Bears
@@ -59,7 +59,6 @@ public class CHSpawnEvents {
 			event.getToolTip().set(0, Component.translatable("item.classichostiles.bear_spawn_egg"));
 		}
 	}
-	
 
 	private <M extends Mob> void replaceMob(M vanillaMob, M replacementMob, ServerLevel level, LivingSpawnEvent.SpecialSpawn event) {
 		// Stop Vanilla Mob spawning

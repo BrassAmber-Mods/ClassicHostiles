@@ -2,6 +2,9 @@
 1.0.0
 ====
  - 1.0.10
+	Added Mixin functionality
+	Bees now pollinate from Mooblooms
+ - 1.0.10
 	Tweak Spawn Egg colors
 	Removed Plains Fox Spawn Egg
 	Tweak Polar Bear replacement
