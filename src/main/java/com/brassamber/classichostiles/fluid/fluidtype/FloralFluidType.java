@@ -2,48 +2,57 @@ package com.brassamber.classichostiles.fluid.fluidtype;
 
 import java.util.function.Consumer;
 
+import com.brassamber.classichostiles.ClassicHostiles;
+
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvents;
+import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.item.Rarity;
+import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.client.extensions.common.IClientFluidTypeExtensions;
 import net.minecraftforge.common.SoundActions;
 import net.minecraftforge.fluids.FluidType;
 
 /**
  * @author  Xrated_junior
- * @version 1.19.2-1.0.5
+ * @version 1.19.2-1.0.13
  */
 public class FloralFluidType extends FluidType {
 
 	public FloralFluidType() {
-		super(FluidType.Properties.create().descriptionId("block.classichostiles.floral_fluid").motionScale(0.008D).density(2000).viscosity(4000).rarity(Rarity.RARE).canSwim(true).canDrown(false).canPushEntity(false).sound(SoundActions.BUCKET_FILL, SoundEvents.BUCKET_FILL).sound(SoundActions.BUCKET_EMPTY, SoundEvents.BUCKET_EMPTY).sound(SoundActions.FLUID_VAPORIZE, SoundEvents.FIRE_EXTINGUISH));
+		super(FluidType.Properties.create().descriptionId("block.classichostiles.floral_fluid")//
+				.motionScale(0.004D)//
+				.density(2000)//
+				.viscosity(4000)//
+				.rarity(Rarity.RARE)//
+				.canSwim(false)//
+				.canDrown(false)//
+				.sound(SoundActions.BUCKET_FILL, SoundEvents.BUCKET_FILL)//
+				.sound(SoundActions.BUCKET_EMPTY, SoundEvents.BUCKET_EMPTY)//
+				.sound(SoundActions.FLUID_VAPORIZE, SoundEvents.FIRE_EXTINGUISH));
+	}
+
+	@Override
+	public void setItemMovement(ItemEntity entity) {
+		double speedModifier = 0.7D;
+		Vec3 vec3 = entity.getDeltaMovement();
+		entity.setDeltaMovement(vec3.x * speedModifier, vec3.y, vec3.z * speedModifier);
 	}
 
 	@Override
 	public void initializeClient(Consumer<IClientFluidTypeExtensions> consumer) {
 		consumer.accept(new IClientFluidTypeExtensions() {
-			private static final ResourceLocation WATER_STILL = new ResourceLocation("minecraft", "block/water_still");
-			private static final ResourceLocation WATER_FLOW = new ResourceLocation("minecraft", "block/water_flow");
-			private static final ResourceLocation WATER_OVERLAY = new ResourceLocation("minecraft", "block/water_overlay");
+			private static final ResourceLocation FLORAL_FLUID_STILL_TEXTURE = ClassicHostiles.locate("block/floral_fluid_still");
+			private static final ResourceLocation FLORAL_FLUID_FLOWING_TEXTURE = ClassicHostiles.locate("block/floral_fluid_flowing");
 
 			@Override
 			public ResourceLocation getStillTexture() {
-				return WATER_STILL;
+				return FLORAL_FLUID_STILL_TEXTURE;
 			}
 
 			@Override
 			public ResourceLocation getFlowingTexture() {
-				return WATER_FLOW;
-			}
-
-			@Override
-			public ResourceLocation getOverlayTexture() {
-				return WATER_OVERLAY;
-			}
-
-			@Override
-			public int getTintColor() {
-				return 0xCC7cc4a5;
+				return FLORAL_FLUID_FLOWING_TEXTURE;
 			}
 		});
 	}
