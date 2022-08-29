@@ -1,7 +1,9 @@
 1.19.x Changelog
 1.0.0
 ====
- - 1.0.10
+ - 1.0.12
+	Added logo
+ - 1.0.11
 	Added Mixin functionality
 	Bees now pollinate from Mooblooms
  - 1.0.10
