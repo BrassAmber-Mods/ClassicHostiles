@@ -45,7 +45,6 @@ import net.minecraft.world.entity.ai.goal.target.HurtByTargetGoal;
 import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
 import net.minecraft.world.entity.ai.targeting.TargetingConditions;
 import net.minecraft.world.entity.animal.Animal;
-import net.minecraft.world.entity.animal.Rabbit;
 import net.minecraft.world.entity.animal.horse.Llama;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -120,7 +119,6 @@ public class BoarEntity extends AbstractHostileAnimal implements IAnimatable, Ha
 		this.goalSelector.addGoal(7, new RandomLookAroundGoal(this));
 		this.targetSelector.addGoal(1, (new HurtByTargetGoal(this)).setAlertOthers(BoarEntity.class));
 		this.targetSelector.addGoal(2, new NearestAttackableTargetGoal<>(this, Player.class, true));
-		this.targetSelector.addGoal(2, new NearestAttackableTargetGoal<>(this, Rabbit.class, true));
 	}
 
 	/*********************************************************** Attributes ********************************************************/
@@ -133,7 +131,7 @@ public class BoarEntity extends AbstractHostileAnimal implements IAnimatable, Ha
 	protected float getStandingEyeHeight(Pose poseIn, EntityDimensions sizeIn) {
 		return this.isBaby() ? sizeIn.height * 0.9F : sizeIn.height * 0.8F;
 	}
-	
+
 	/*********************************************************** Spawning ********************************************************/
 
 	@Override
@@ -213,9 +211,8 @@ public class BoarEntity extends AbstractHostileAnimal implements IAnimatable, Ha
 		}
 
 	}
-	
-	/*********************************************************** Killing ********************************************************/
 
+	/*********************************************************** Killing ********************************************************/
 
 	/**
 	 * Share the love for killing
