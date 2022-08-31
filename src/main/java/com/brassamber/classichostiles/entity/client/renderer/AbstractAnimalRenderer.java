@@ -16,7 +16,7 @@ import software.bernie.geckolib3.renderers.geo.GeoEntityRenderer;
 
 /**
  * @author  Xrated_junior
- * @version 1.19.2-1.0.2
+ * @version 1.19.2-1.0.15
  */
 public abstract class AbstractAnimalRenderer<T extends LivingEntity & IAnimatable> extends GeoEntityRenderer<T> {
 	protected float modelScale;
@@ -37,7 +37,9 @@ public abstract class AbstractAnimalRenderer<T extends LivingEntity & IAnimatabl
 	@Override
 	public RenderType getRenderType(T animatable, float partialTicks, PoseStack stack, @Nullable MultiBufferSource renderTypeBuffer, @Nullable VertexConsumer vertexBuilder, int packedLightIn, ResourceLocation textureLocation) {
 		if (animatable.isBaby()) {
-			stack.scale(this.modelScale * 0.7f, this.modelScale * 0.7f, this.modelScale * 0.75f);
+			float babyScale = 0.5f;
+			stack.scale(this.modelScale * babyScale, this.modelScale * babyScale, this.modelScale * babyScale);
+			stack.translate(0, -0.025f, 0);
 		} else {
 			stack.scale(this.modelScale, this.modelScale, this.modelScale);
 		}

@@ -1,6 +1,11 @@
 1.19.x Changelog
 1.0.0
 ====
+ - 1.0.15
+	Deleted black Boar variant
+	Added new Boar model
+	Added new Boar textures
+	Fixed Boar baby scale
  - 1.0.14
 	Added Boar breeding
  - 1.0.13

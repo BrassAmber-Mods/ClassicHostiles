@@ -24,12 +24,11 @@ import software.bernie.geckolib3.model.AnimatedGeoModel;
 
 /**
  * @author  Xrated_junior
- * @version 1.19.2-1.0.7
+ * @version 1.19.2-1.0.15
  */
 @OnlyIn(Dist.CLIENT)
 public class BoarModel extends AnimatedGeoModel<BoarEntity> {
 	private static final Map<BoarVariant, ResourceLocation> BOAR_TEXTURES = Util.make(Maps.newHashMap(), (texture) -> {
-		texture.put(BoarVariant.BLACK, ClassicHostiles.locate("textures/entity/boar/boar_black.png"));
 		texture.put(BoarVariant.BROWN, ClassicHostiles.locate("textures/entity/boar/boar_brown.png"));
 		texture.put(BoarVariant.GREY, ClassicHostiles.locate("textures/entity/boar/boar_grey.png"));
 		texture.put(BoarVariant.TAN, ClassicHostiles.locate("textures/entity/boar/boar_tan.png"));
@@ -37,6 +36,7 @@ public class BoarModel extends AnimatedGeoModel<BoarEntity> {
 
 	private boolean initialized = false;
 	private IBone head;
+	private IBone tusks;
 	private IBone right_leg;
 	private IBone left_leg;
 	private IBone right_arm;
@@ -47,10 +47,11 @@ public class BoarModel extends AnimatedGeoModel<BoarEntity> {
 		GeoModel geoModel = super.getModel(location);
 		if (!initialized) {
 			this.head = this.getBone("head");
-			this.right_leg = this.getBone("rightleg");
-			this.left_leg = this.getBone("leftleg");
-			this.right_arm = this.getBone("rightarm");
-			this.left_arm = this.getBone("leftarm");
+			this.tusks = this.getBone("tusks");
+			this.right_leg = this.getBone("right_leg");
+			this.left_leg = this.getBone("left_leg");
+			this.right_arm = this.getBone("right_arm");
+			this.left_arm = this.getBone("left_arm");
 			this.initialized = true;
 		}
 		return geoModel;
@@ -104,6 +105,7 @@ public class BoarModel extends AnimatedGeoModel<BoarEntity> {
 	@SuppressWarnings("rawtypes")
 	@Override
 	public void setLivingAnimations(BoarEntity entity, Integer uniqueID, @Nullable AnimationEvent customPredicate) {
+		super.setLivingAnimations(entity, uniqueID, customPredicate);
 		Minecraft minecraft = Minecraft.getInstance();
 		float tick = minecraft.getPartialTick();
 
@@ -118,5 +120,15 @@ public class BoarModel extends AnimatedGeoModel<BoarEntity> {
 		this.head.setRotationX(-headPitch * ((float) Math.PI / 180F));
 
 		this.performWalkingAnimations(entity, tick);
+
+		if (entity.isBaby()) {
+			this.head.setScaleX(1.8F);
+			this.head.setScaleY(1.8F);
+			this.head.setScaleZ(1.8F);
+			this.head.setPositionY(4.0f);
+			this.head.setPositionZ(2.0f);
+		}
+
+		this.tusks.setHidden(entity.isBaby());
 	}
 }

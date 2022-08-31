@@ -62,7 +62,7 @@ import software.bernie.geckolib3.core.manager.AnimationFactory;
 
 /**
  * @author  Xrated_junior
- * @version 1.19.2-1.0.14
+ * @version 1.19.2-1.0.15
  */
 public class BoarEntity extends AbstractHostileAnimal implements IAnimatable, HasTextureVariant {
 	private AnimationFactory factory = new AnimationFactory(this);
@@ -91,7 +91,7 @@ public class BoarEntity extends AbstractHostileAnimal implements IAnimatable, Ha
 	@Override
 	protected void defineSynchedData() {
 		super.defineSynchedData();
-		this.entityData.define(DATA_VARIANT_ID, BoarVariant.BLACK.getName());
+		this.entityData.define(DATA_VARIANT_ID, BoarVariant.BROWN.getName());
 	}
 
 	@Override
@@ -103,7 +103,11 @@ public class BoarEntity extends AbstractHostileAnimal implements IAnimatable, Ha
 	@Override
 	public void readAdditionalSaveData(CompoundTag compoundTag) {
 		super.readAdditionalSaveData(compoundTag);
-		this.setVariant(compoundTag.getString(DATA_VARIANT_TAG));
+		if (BoarVariant.isValidBoarVariant(compoundTag.getString(DATA_VARIANT_TAG))) {
+			this.setVariant(compoundTag.getString(DATA_VARIANT_TAG));
+		} else {
+			this.setVariant(BoarVariant.getRandomVariant(this.getRandom()).getName());
+		}
 	}
 
 	/*********************************************************** Goals ********************************************************/
@@ -394,7 +398,6 @@ public class BoarEntity extends AbstractHostileAnimal implements IAnimatable, Ha
 	}
 
 	public static enum BoarVariant {
-		BLACK("black"),
 		BROWN("brown"),
 		GREY("grey"),
 		TAN("tan");
@@ -415,14 +418,23 @@ public class BoarEntity extends AbstractHostileAnimal implements IAnimatable, Ha
 			return Util.getRandom(ALL_VARIANTS, random);
 		}
 
-		static BoarVariant getByName(String name) {
+		public static boolean isValidBoarVariant(String name) {
 			for (BoarVariant boarVariant : ALL_VARIANTS) {
-				if (boarVariant.getName().equals(name)) {
+				if (boarVariant.getName().equals(name.toLowerCase())) {
+					return true;
+				}
+			}
+			return false;
+		}
+
+		public static BoarVariant getByName(String name) {
+			for (BoarVariant boarVariant : ALL_VARIANTS) {
+				if (boarVariant.getName().equals(name.toLowerCase())) {
 					return boarVariant;
 				}
 			}
 			ClassicHostiles.LOGGER.error("Couldn't find Boar variant for: {}.", name);
-			return BLACK;
+			return BROWN;
 		}
 	}
 

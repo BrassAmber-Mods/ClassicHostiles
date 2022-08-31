@@ -10,12 +10,12 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 
 /**
  * @author  Xrated_junior
- * @version 1.19.2-1.0.4
+ * @version 1.19.2-1.0.15
  */
 @OnlyIn(Dist.CLIENT)
 public class BoarRenderer extends AbstractAnimalRenderer<BoarEntity> {
 
 	public BoarRenderer(Context renderManager) {
-		super(renderManager, new BoarModel(), 0.7f, 1.2f);
+		super(renderManager, new BoarModel(), 0.7f, 1.0f);
 	}
 }
