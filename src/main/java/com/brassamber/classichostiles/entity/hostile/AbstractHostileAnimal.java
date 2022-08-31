@@ -25,7 +25,7 @@ import net.minecraftforge.network.NetworkHooks;
  * Referenced from {@link Monster}
  * 
  * @author  Xrated_junior
- * @version 1.19.2-1.0.0
+ * @version 1.19.2-1.0.14
  */
 public abstract class AbstractHostileAnimal extends Animal implements Enemy {
 
@@ -48,6 +48,7 @@ public abstract class AbstractHostileAnimal extends Animal implements Enemy {
 
 	/*********************************************************** Tick ********************************************************/
 
+	@Override
 	public void aiStep() {
 		this.updateAttackTime();
 		super.aiStep();
@@ -65,6 +66,7 @@ public abstract class AbstractHostileAnimal extends Animal implements Enemy {
 	/**
 	 * Normally disabled for babies
 	 */
+	@Override
 	public boolean shouldDropExperience() {
 		return true;
 	}
@@ -72,32 +74,39 @@ public abstract class AbstractHostileAnimal extends Animal implements Enemy {
 	/**
 	 * Normally disabled for babies
 	 */
+	@Override
 	protected boolean shouldDropLoot() {
 		return true;
 	}
 
 	/*********************************************************** Sounds ********************************************************/
 
+	@Override
 	public SoundSource getSoundSource() {
 		return SoundSource.HOSTILE;
 	}
 
+	@Override
 	protected SoundEvent getSwimSound() {
 		return SoundEvents.HOSTILE_SWIM;
 	}
 
+	@Override
 	protected SoundEvent getSwimSplashSound() {
 		return SoundEvents.HOSTILE_SPLASH;
 	}
 
+	@Override
 	protected SoundEvent getHurtSound(DamageSource p_33034_) {
 		return SoundEvents.HOSTILE_HURT;
 	}
 
+	@Override
 	protected SoundEvent getDeathSound() {
 		return SoundEvents.HOSTILE_DEATH;
 	}
 
+	@Override
 	public LivingEntity.Fallsounds getFallSounds() {
 		return new LivingEntity.Fallsounds(SoundEvents.HOSTILE_SMALL_FALL, SoundEvents.HOSTILE_BIG_FALL);
 	}
