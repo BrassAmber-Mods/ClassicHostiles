@@ -1,6 +1,7 @@
 package com.brassamber.classichostiles.entity;
 
 import com.brassamber.classichostiles.ClassicHostiles;
+import com.brassamber.classichostiles.entity.hostile.BigCatEntity;
 import com.brassamber.classichostiles.entity.hostile.BoarEntity;
 import com.brassamber.classichostiles.entity.neutral.BearEntity;
 import com.brassamber.classichostiles.entity.neutral.PlainsFoxEntity;
@@ -38,6 +39,7 @@ public class CHEntityTypes {
 	/*********************************************************** Hostile ********************************************************/
 
 	public static final RegistryObject<EntityType<BoarEntity>> BOAR = registerEntityType("boar", 0x674D31, 0x363636, EntityType.Builder.of(BoarEntity::new, MobCategory.CREATURE).sized(0.9F, 0.9F).clientTrackingRange(10));
+	public static final RegistryObject<EntityType<BigCatEntity>> BIG_CAT = registerEntityType("big_cat", 0x674D31, 0x363636, EntityType.Builder.of(BigCatEntity::new, MobCategory.CREATURE).sized(0.9F, 0.9F).clientTrackingRange(10));
 
 	/*********************************************************** Neutral ********************************************************/
 
@@ -57,6 +59,7 @@ public class CHEntityTypes {
 		ClassicHostiles.LOGGER.debug("Registering spawn placements");
 		// Hostile
 		registerSpawnPlacement(BOAR.get(), BoarEntity::checkHostileAnimalSpawnRules);
+		registerSpawnPlacement(BIG_CAT.get(), BigCatEntity::checkHostileAnimalSpawnRules);
 
 		// Neutral
 		registerSpawnPlacement(PLAINS_FOX.get(), SpawnPlacements.Type.NO_RESTRICTIONS, PlainsFoxEntity::checkPlainsFoxSpawnRules);
@@ -68,6 +71,7 @@ public class CHEntityTypes {
 		ClassicHostiles.LOGGER.debug("Building attributes");
 		// Hostile
 		event.put(BOAR.get(), BoarEntity.createAttributes().build());
+		event.put(BIG_CAT.get(), BigCatEntity.createAttributes().build());
 
 		// Neutral
 		event.put(PLAINS_FOX.get(), Fox.createAttributes().build());

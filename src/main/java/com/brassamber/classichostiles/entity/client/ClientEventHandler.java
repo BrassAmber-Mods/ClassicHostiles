@@ -2,6 +2,7 @@ package com.brassamber.classichostiles.entity.client;
 
 import com.brassamber.classichostiles.ClassicHostiles;
 import com.brassamber.classichostiles.entity.CHEntityTypes;
+import com.brassamber.classichostiles.entity.client.renderer.hostile.BigCatRenderer;
 import com.brassamber.classichostiles.entity.client.renderer.hostile.BoarRenderer;
 import com.brassamber.classichostiles.entity.client.renderer.neutral.BearRenderer;
 import com.brassamber.classichostiles.entity.client.renderer.neutral.PlainsFoxRenderer;
@@ -28,6 +29,7 @@ public class ClientEventHandler {
 		ClassicHostiles.LOGGER.debug("Register Entity Renderers");
 		/*********************************************************** Hostile ********************************************************/
 		event.registerEntityRenderer(CHEntityTypes.BOAR.get(), BoarRenderer::new);
+		event.registerEntityRenderer(CHEntityTypes.BIG_CAT.get(), BigCatRenderer::new);
 
 		/*********************************************************** Neutral ********************************************************/
 		event.registerEntityRenderer(CHEntityTypes.PLAINS_FOX.get(), PlainsFoxRenderer::new);
