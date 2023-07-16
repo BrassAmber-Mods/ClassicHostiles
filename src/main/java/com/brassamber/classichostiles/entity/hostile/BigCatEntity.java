@@ -22,13 +22,7 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.damagesource.DamageSource;
-import net.minecraft.world.entity.AgeableMob;
-import net.minecraft.world.entity.EntityDimensions;
-import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.MobSpawnType;
-import net.minecraft.world.entity.Pose;
-import net.minecraft.world.entity.SpawnGroupData;
+import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.goal.*;
@@ -337,6 +331,7 @@ public class BigCatEntity extends AbstractHostileAnimal implements IAnimatable, 
         return SoundEvents.CAT_DEATH;
     }
 
+    // UPDATE THIS SOUND WITH A PROPER STEP SOUND FOR BIG CAT
     @Override
     protected void playStepSound(BlockPos pos, BlockState state) {
         this.playSound(SoundEvents.CAT_PURR, 0.15F, 1.0F);
@@ -411,6 +406,11 @@ public class BigCatEntity extends AbstractHostileAnimal implements IAnimatable, 
     /**
      * Referenced from {@link Llama}
      */
+
+    public boolean causeFallDamage(float p_148859_, float p_148860_, DamageSource p_148861_) {
+        return false;
+    }
+
     static class BigCatGroupData extends AgeableMob.AgeableMobGroupData {
         public final String variant;
 
