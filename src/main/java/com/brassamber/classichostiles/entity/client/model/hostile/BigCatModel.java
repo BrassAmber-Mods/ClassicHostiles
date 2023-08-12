@@ -54,7 +54,6 @@ public class BigCatModel extends AnimatedGeoModel<BigCatEntity> {
     public GeoModel getModel(ResourceLocation location) {
         GeoModel geoModel = super.getModel(location);
         if (!initialized) {
-            this.cat = this.getBone("cat");
             this.body = this.getBone("body");
             this.head = this.getBone("head");
             this.earright = this.getBone("earright");
@@ -106,11 +105,10 @@ public class BigCatModel extends AnimatedGeoModel<BigCatEntity> {
         }
 
         // ANIMATIONS NEED TO BE FIXED!!
-        this.cat.setRotationX(Mth.cos(f5 * 0.0F) * 0.0F * f8);
         this.body.setRotationX(Mth.cos(f5 * 0.0F) * 0.0F * f8);
         this.head.setRotationX(Mth.cos(f5 * 0.0F) * 0.0F * f8);
-        this.earright.setRotationX(Mth.cos(f5 * 0.2F) * 0.3F * f8);
-        this.earleft.setRotationX(Mth.cos(f5 * 0.2F) * 0.3F * f8);
+        this.earright.setRotationY(Mth.cos(f5 * 0.7F + (float) Math.PI) * 0.1F * f8);
+        this.earleft.setRotationY(Mth.cos(f5 * 0.2F) * 0.3F * f8);
         this.tail.setRotationZ(Mth.cos(f5 * 0.7F) * 0.5F * f8);
         this.legleftfront.setRotationZ(Mth.cos(f5 * 0.6662F + (float) Math.PI) * 1.4F * f8);
         this.legleftback.setRotationZ(Mth.cos(f5 * 0.6662F) * 1.4F * f8);
