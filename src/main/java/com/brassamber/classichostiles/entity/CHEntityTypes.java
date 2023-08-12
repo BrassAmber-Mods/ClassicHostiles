@@ -16,6 +16,7 @@ import net.minecraft.world.entity.MobCategory;
 import net.minecraft.world.entity.SpawnPlacements;
 import net.minecraft.world.entity.animal.Cow;
 import net.minecraft.world.entity.animal.Fox;
+import net.minecraft.world.entity.animal.Dolphin;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Blocks;
@@ -40,8 +41,8 @@ public class CHEntityTypes {
 	/*********************************************************** Hostile ********************************************************/
 
 	public static final RegistryObject<EntityType<BoarEntity>> BOAR = registerEntityType("boar", 0x674D31, 0x363636, EntityType.Builder.of(BoarEntity::new, MobCategory.CREATURE).sized(0.9F, 0.9F).clientTrackingRange(10));
-	public static final RegistryObject<EntityType<BigCatEntity>> BIG_CAT = registerEntityType("big_cat", 0xb58500, 0x000000, EntityType.Builder.of(BigCatEntity::new, MobCategory.CREATURE).sized(1.4F, 1.4F).clientTrackingRange(10));
-	public static final RegistryObject<EntityType<CrocodileEntity>> CROCODILE = registerEntityType("crocodile", 0x192900, 0x577923,EntityType.Builder.of(CrocodileEntity::new, MobCategory.CREATURE).sized(1.0F, 1.0F).clientTrackingRange(10));
+	public static final RegistryObject<EntityType<BigCatEntity>> BIG_CAT = registerEntityType("big_cat", 0xfca103, 0x000000, EntityType.Builder.of(BigCatEntity::new, MobCategory.CREATURE).sized(1.0F, 1.0F).clientTrackingRange(10));
+	public static final RegistryObject<EntityType<CrocodileEntity>> CROCODILE = registerEntityType("crocodile", 0x192900, 0x577923,EntityType.Builder.of(CrocodileEntity::new, MobCategory.CREATURE).sized(2.0F, 1.5F).clientTrackingRange(10));
 
 	/*********************************************************** Neutral ********************************************************/
 
