@@ -113,14 +113,14 @@ public class CrocodileModel extends AnimatedGeoModel<CrocodileEntity> {
         this.head.setRotationX(Mth.cos(f5 * 0.0F + (float) Math.PI) * 0.0F * f8);
         this.lower_jaw.setRotationX(Mth.cos(f5 * 0.0F) * 0.0F * f8);
         this.upper_jaw.setRotationX(Mth.cos(f5 * 0.0F) * 0.0F * f8);
-        this.tail_base.setRotationX(Mth.cos(f5 * 0.0F + (float) Math.PI) * 0.0F * f8);
-        this.tail_middle.setRotationX(Mth.cos(f5 * 0.0F + (float) Math.PI) * 0.0F * f8);
-        this.tail_end.setRotationX(Mth.cos(f5 * 0.0F) * 0.0F * f8);
-        this.tail_tip.setRotationX(Mth.cos(f5 * 0.0F) * 0.0F * f8);
-        this.leg_left_back.setRotationX(Mth.cos(f5 * 0.0F + (float) Math.PI) * 0.0F * f8);
-        this.leg_left_front.setRotationX(Mth.cos(f5 * 0.0F + (float) Math.PI) * 0.0F * f8);
-        this.leg_right_back.setRotationX(Mth.cos(f5 * 0.0F + (float) Math.PI) * 0.0F * f8);
-        this.leg_right_front.setRotationX(Mth.cos(f5 * 0.0F + (float) Math.PI) * 0.0F * f8);
+        this.tail_base.setRotationY(Mth.cos(f5 * 0.8F) * 0.80F * f8);
+        this.tail_middle.setRotationY(Mth.cos(f5 * 0.8F) * 0.55F * f8);
+        this.tail_end.setRotationY(Mth.cos(f5 * 0.8F) * 0.25F * f8);
+        this.tail_tip.setRotationY(Mth.cos(f5 * 0.8F) * 0.05F * f8);
+        this.leg_left_back.setRotationX(Mth.cos(f5 * 0.6F) * 0.5F * f8);
+        this.leg_left_front.setRotationX(Mth.cos(f5 * 0.6F + (float) Math.PI) * 0.5F * f8);
+        this.leg_right_back.setRotationX(Mth.cos(f5 * 0.6F + (float) Math.PI) * 0.5F * f8);
+        this.leg_right_front.setRotationX(Mth.cos(f5 * 0.6F) * 0.5F * f8);
     }
 
     @SuppressWarnings("rawtypes")
