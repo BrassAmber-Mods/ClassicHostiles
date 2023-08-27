@@ -1,5 +1,9 @@
 package com.brassamber.classichostiles;
 
+/** ADD THIS TOO
+ * import com.brassamber.classichostiles.sound.CHSoundEvents;
+ */
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -39,6 +43,9 @@ public class ClassicHostiles {
 		CHEntityTypes.DEFERRED_ENTITY_TYPES.register(modEventBus);
 		CHFluids.DEFERRED_FLUID_TYPES.register(modEventBus);
 		CHFluids.DEFERRED_FLUIDS.register(modEventBus);
+		/** ADD THIS BACK
+		 * CHSoundEvents.SOUND_EVENTS.register(modEventBus);
+		 */
 
 		CHMobSpawnModifiers.DEFERRED_BIOME_MODIFIER_SERIALIZER.register(modEventBus);
 

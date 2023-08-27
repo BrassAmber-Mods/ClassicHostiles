@@ -15,6 +15,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.entity.LivingEntityRenderer;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
+import net.minecraft.world.entity.animal.Cat;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
@@ -53,13 +54,12 @@ public class BigCatModel extends AnimatedGeoModel<BigCatEntity> {
     public GeoModel getModel(ResourceLocation location) {
         GeoModel geoModel = super.getModel(location);
         if (!initialized) {
-            this.cat = this.getBone("cat");
             this.body = this.getBone("body");
             this.head = this.getBone("head");
             this.earright = this.getBone("earright");
             this.earleft = this.getBone("earleft");
             this.tail = this.getBone("tail");
-            this.legleftfront = this.getBone("legleftback");
+            this.legleftfront = this.getBone("legleftfront");
             this.legleftback = this.getBone("legleftback");
             this.legrightfront = this.getBone("legrightfront");
             this.legrightback = this.getBone("legrightback");
@@ -75,7 +75,7 @@ public class BigCatModel extends AnimatedGeoModel<BigCatEntity> {
 
     @Override
     public ResourceLocation getAnimationResource(BigCatEntity entityIn) {
-        return ClassicHostiles.locate("animations/BigCat.animation.json");
+        return ClassicHostiles.locate("animations/big_cat.animation.json");
     }
 
     /**
@@ -105,16 +105,15 @@ public class BigCatModel extends AnimatedGeoModel<BigCatEntity> {
         }
 
         // ANIMATIONS NEED TO BE FIXED!!
-        this.cat.setRotationX(Mth.cos(f5 * 0.6662F) * 1.4F * f8);
-        this.body.setRotationX(Mth.cos(f5 * 0.6662F + (float) Math.PI) * 1.4F * f8);
-        this.head.setRotationX(Mth.cos(f5 * 0.6662F + (float) Math.PI) * 1.4F * f8);
-        this.earright.setRotationX(Mth.cos(f5 * 0.6662F) * 1.4F * f8);
-        this.earleft.setRotationX(Mth.cos(f5 * 0.6662F) * 1.4F * f8);
-        this.tail.setRotationX(Mth.cos(f5 * 0.6662F + (float) Math.PI) * 1.4F * f8);
-        this.legleftfront.setRotationX(Mth.cos(f5 * 0.6662F + (float) Math.PI) * 1.4F * f8);
-        this.legleftback.setRotationX(Mth.cos(f5 * 0.6662F) * 1.4F * f8);
-        this.legrightfront.setRotationX(Mth.cos(f5 * 0.6662F) * 1.4F * f8);
-        this.legrightback.setRotationX(Mth.cos(f5 * 0.6662F + (float) Math.PI) * 1.4F * f8);
+        this.body.setRotationX(Mth.cos(f5 * 0.0F) * 0.0F * f8);
+        this.head.setRotationX(Mth.cos(f5 * 0.0F) * 0.0F * f8);
+        this.earright.setRotationY(Mth.cos(f5 * 0.7F + (float) Math.PI) * 0.1F * f8);
+        this.earleft.setRotationY(Mth.cos(f5 * 0.2F) * 0.3F * f8);
+        this.tail.setRotationZ(Mth.cos(f5 * 0.7F) * 0.5F * f8);
+        this.legleftfront.setRotationZ(Mth.cos(f5 * 0.6662F + (float) Math.PI) * 1.4F * f8);
+        this.legleftback.setRotationZ(Mth.cos(f5 * 0.6662F) * 1.4F * f8);
+        this.legrightfront.setRotationZ(Mth.cos(f5 * 0.6662F) * 1.4F * f8);
+        this.legrightback.setRotationZ(Mth.cos(f5 * 0.6662F + (float) Math.PI) * 1.4F * f8);
     }
 
     @SuppressWarnings("rawtypes")

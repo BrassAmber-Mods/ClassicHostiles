@@ -1,6 +1,14 @@
 1.19.x Changelog
 1.0.0
 ====
+ - 1.0.16
+    Started implementing Classic Hostiles sound handler
+    Added Big Cat
+    Added Big Cat spawn egg
+    Fixed Big Cat model rotation
+    Added Crocodile
+    Added Crocodile spawn egg
+    Slightly fixed animations for Crocodile and Big Cat
  - 1.0.15
 	Deleted black Boar variant
 	Added new Boar model

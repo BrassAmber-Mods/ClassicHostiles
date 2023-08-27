@@ -19,26 +19,30 @@ import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
+import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.entity.ai.control.SmoothSwimmingLookControl;
+import net.minecraft.world.entity.ai.control.SmoothSwimmingMoveControl;
+import net.minecraft.world.entity.ai.navigation.PathNavigation;
+import net.minecraft.world.entity.ai.navigation.WaterBoundPathNavigation;
+import net.minecraft.world.entity.animal.Dolphin;
 import net.minecraft.world.entity.ai.goal.*;
 import net.minecraft.world.entity.ai.goal.target.HurtByTargetGoal;
 import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
 import net.minecraft.world.entity.ai.targeting.TargetingConditions;
 import net.minecraft.world.entity.animal.Animal;
-import net.minecraft.world.entity.animal.Cat;
-import net.minecraft.world.entity.animal.IronGolem;
 import net.minecraft.world.entity.animal.horse.Llama;
-import net.minecraft.world.entity.monster.Spider;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.ServerLevelAccessor;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.Vec3;
 import software.bernie.geckolib3.core.IAnimatable;
 import software.bernie.geckolib3.core.PlayState;
 import software.bernie.geckolib3.core.controller.AnimationController;
@@ -50,13 +54,16 @@ import software.bernie.geckolib3.core.manager.AnimationFactory;
  * @author  Xrated_junior
  * @version 1.19.2-1.0.15
  */
-public class BigCatEntity extends AbstractHostileAnimal implements IAnimatable, HasTextureVariant {
+public class CrocodileEntity extends AbstractHostileAnimal implements IAnimatable, HasTextureVariant {
     private AnimationFactory factory = new AnimationFactory(this);
-    private static final EntityDataAccessor<String> DATA_VARIANT_ID = SynchedEntityData.defineId(BigCatEntity.class, EntityDataSerializers.STRING);
+    private static final EntityDataAccessor<String> DATA_VARIANT_ID = SynchedEntityData.defineId(CrocodileEntity.class, EntityDataSerializers.STRING);
+    private static final EntityDataAccessor<Integer> MOISTNESS_LEVEL = SynchedEntityData.defineId(CrocodileEntity.class, EntityDataSerializers.INT);
     private static final String DATA_VARIANT_TAG = "Variant";
     private static final double BREEDING_RANGE = 8.0D; // Range taken from {@link BreedGoal}
+    public static final int TOTAL_AIR_SUPPLY = 4800;
+    private static final int TOTAL_MOISTNESS_LEVEL = 2400;
     private static final Predicate<LivingEntity> PARTNER_SELECTOR = (entity) -> {
-        return entity instanceof BigCatEntity && !((BigCatEntity) entity).isBaby() && ((BigCatEntity) entity).getAge() == 0;
+        return entity instanceof CrocodileEntity && !((CrocodileEntity) entity).isBaby() && ((CrocodileEntity) entity).getAge() == 0;
     };
     private static final TargetingConditions PARTNER_TARGETING = TargetingConditions.forNonCombat().range(BREEDING_RANGE).ignoreLineOfSight().selector(PARTNER_SELECTOR);
     private static final int AFTER_ATTACK_COOLDOWN = 80; // Little cooldown before breeding starts
@@ -68,8 +75,10 @@ public class BigCatEntity extends AbstractHostileAnimal implements IAnimatable, 
     private int findLoveInterval;
     private int particleTick;
 
-    public BigCatEntity(EntityType<? extends AbstractHostileAnimal> bigCatEntity, Level level) {
-        super(bigCatEntity, level);
+    public CrocodileEntity(EntityType<? extends AbstractHostileAnimal> crocodileEntity, Level level) {
+        super(crocodileEntity, level);
+        this.moveControl = new SmoothSwimmingMoveControl(this, 85, 10, 0.02F, 0.1F, true);
+        this.lookControl = new SmoothSwimmingLookControl(this, 10);
     }
 
     /*********************************************************** Mob data ********************************************************/
@@ -77,7 +86,8 @@ public class BigCatEntity extends AbstractHostileAnimal implements IAnimatable, 
     @Override
     protected void defineSynchedData() {
         super.defineSynchedData();
-        this.entityData.define(DATA_VARIANT_ID, BigCatVariant.JUNGLE.getName());
+        this.entityData.define(DATA_VARIANT_ID, CrocodileVariant.CROCODILE.getName());
+        this.entityData.define(MOISTNESS_LEVEL, 2400);
     }
 
     @Override
@@ -89,10 +99,10 @@ public class BigCatEntity extends AbstractHostileAnimal implements IAnimatable, 
     @Override
     public void readAdditionalSaveData(CompoundTag compoundTag) {
         super.readAdditionalSaveData(compoundTag);
-        if (BigCatVariant.isValidBigCatVariant(compoundTag.getString(DATA_VARIANT_TAG))) {
+        if (CrocodileVariant.isValidCrocodileVariant(compoundTag.getString(DATA_VARIANT_TAG))) {
             this.setVariant(compoundTag.getString(DATA_VARIANT_TAG));
         } else {
-            this.setVariant(BigCatVariant.getRandomVariant(this.getRandom()).getName());
+            this.setVariant(CrocodileVariant.getRandomVariant(this.getRandom()).getName());
         }
     }
 
@@ -101,19 +111,26 @@ public class BigCatEntity extends AbstractHostileAnimal implements IAnimatable, 
     @Override
     protected void registerGoals() {
         this.goalSelector.addGoal(1, new FloatGoal(this));
-        this.goalSelector.addGoal(3, new LeapAtTargetGoal(this, 0.4F));
-        this.goalSelector.addGoal(4, new BigCatEntity.BigCatAttackGoal(this));
-        this.goalSelector.addGoal(5, new WaterAvoidingRandomStrollGoal(this, 0.8D));
+        // this.goalSelector.addGoal(3, new LeapAtTargetGoal(this, 0.4F));
+        this.goalSelector.addGoal(4, new CrocodileEntity.CrocodileAttackGoal(this));
+        this.goalSelector.addGoal(4, new RandomSwimmingGoal(this, 1.0D, 10));
+        this.goalSelector.addGoal(6, new MeleeAttackGoal(this, (double)1.2F, true));
         this.goalSelector.addGoal(6, new LookAtPlayerGoal(this, Player.class, 8.0F));
         this.goalSelector.addGoal(6, new RandomLookAroundGoal(this));
         this.targetSelector.addGoal(1, new HurtByTargetGoal(this));
-        this.targetSelector.addGoal(2, new BigCatEntity.BigCatTargetGoal<>(this, Player.class));
+        this.targetSelector.addGoal(2, new CrocodileEntity.CrocodileTargetGoal<>(this, Player.class));
+
+
     }
 
     /*********************************************************** Attributes ********************************************************/
 
     public static AttributeSupplier.Builder createAttributes() {
-        return AbstractHostileAnimal.createAttributes().add(Attributes.MAX_HEALTH, 10.0D).add(Attributes.MOVEMENT_SPEED, 0.25D).add(Attributes.ATTACK_DAMAGE, 4.0D).add(Attributes.ATTACK_KNOCKBACK);
+        return AbstractHostileAnimal.createAttributes().add(Attributes.MAX_HEALTH, 25.0D).add(Attributes.MOVEMENT_SPEED, 0.25D).add(Attributes.ATTACK_DAMAGE, 4.0D).add(Attributes.ATTACK_KNOCKBACK);
+    }
+
+    protected PathNavigation createNavigation(Level p_28362_) {
+        return new WaterBoundPathNavigation(this, p_28362_);
     }
 
     @Override
@@ -121,16 +138,39 @@ public class BigCatEntity extends AbstractHostileAnimal implements IAnimatable, 
         return this.isBaby() ? sizeIn.height * 0.9F : sizeIn.height * 0.8F;
     }
 
+    public int getMaxAirSupply() {
+        return 4800;
+    }
+
+    protected int increaseAirSupply(int p_28389_) {
+        return this.getMaxAirSupply();
+    }
+
+    public int getMoistnessLevel() {
+        return this.entityData.get(MOISTNESS_LEVEL);
+    }
+
+    public void setMoistnessLevel(int p_28344_) {
+        this.entityData.set(MOISTNESS_LEVEL, p_28344_);
+    }
+
+    public boolean canBreatheUnderwater() {
+        return false;
+    }
+
+    protected void handleAirSupply(int p_28326_) {
+    }
+
     /*********************************************************** Spawning ********************************************************/
 
     @Override
     public SpawnGroupData finalizeSpawn(ServerLevelAccessor world, DifficultyInstance difficulty, MobSpawnType mobSpawnType, @Nullable SpawnGroupData spawnGroupData, @Nullable CompoundTag compoundTag) {
         String variant;
-        if (spawnGroupData instanceof BigCatGroupData) {
-            variant = ((BigCatGroupData) spawnGroupData).variant;
+        if (spawnGroupData instanceof CrocodileGroupData) {
+            variant = ((CrocodileGroupData) spawnGroupData).variant;
         } else {
-            variant = BigCatVariant.getRandomVariant(world.getRandom()).getName();
-            spawnGroupData = new BigCatGroupData(variant);
+            variant = CrocodileVariant.getRandomVariant(world.getRandom()).getName();
+            spawnGroupData = new CrocodileGroupData(variant);
         }
 
         this.setVariant(variant);
@@ -139,8 +179,8 @@ public class BigCatEntity extends AbstractHostileAnimal implements IAnimatable, 
 
     /*********************************************************** Attack Specifications ********************************************************/
 
-    static class BigCatAttackGoal extends MeleeAttackGoal {
-        public BigCatAttackGoal(BigCatEntity p_33822_) {
+    static class CrocodileAttackGoal extends MeleeAttackGoal {
+        public CrocodileAttackGoal(CrocodileEntity p_33822_) {
             super(p_33822_, 1.0D, true);
         }
 
@@ -163,8 +203,8 @@ public class BigCatEntity extends AbstractHostileAnimal implements IAnimatable, 
         }
     }
 
-    static class BigCatTargetGoal<T extends LivingEntity> extends NearestAttackableTargetGoal<T> {
-        public BigCatTargetGoal(BigCatEntity p_33832_, Class<T> p_33833_) {
+    static class CrocodileTargetGoal<T extends LivingEntity> extends NearestAttackableTargetGoal<T> {
+        public CrocodileTargetGoal(CrocodileEntity p_33832_, Class<T> p_33833_) {
             super(p_33832_, p_33833_, true);
         }
 
@@ -180,17 +220,17 @@ public class BigCatEntity extends AbstractHostileAnimal implements IAnimatable, 
     /**
      * Share the love for killing
      */
-    private void shareKillWithOtherAttackingBigCats() {
-        List<BigCatEntity> nearbyBigCats = this.level.getNearbyEntities(BigCatEntity.class, PARTNER_TARGETING, this, this.getBoundingBox().inflate(BREEDING_RANGE));
-        for (BigCatEntity BigCat : nearbyBigCats) {
-            BigCat.ticksBeforeBreeding = this.resetAfterAttackCooldown();
+    private void shareKillWithOtherAttackingCrocodiles() {
+        List<CrocodileEntity> nearbyCrocodiles = this.level.getNearbyEntities(CrocodileEntity.class, PARTNER_TARGETING, this, this.getBoundingBox().inflate(BREEDING_RANGE));
+        for (CrocodileEntity Crocodile : nearbyCrocodiles) {
+            Crocodile.ticksBeforeBreeding = this.resetAfterAttackCooldown();
             if (this.random.nextInt(10) == 0) {
-                BigCat.setBigCatKill();
+                Crocodile.setCrocodileKill();
             }
         }
     }
 
-    private void setBigCatKill() {
+    private void setCrocodileKill() {
         if (this.getAge() == 0) {
             this.setInLove(null);
         } else {
@@ -231,7 +271,7 @@ public class BigCatEntity extends AbstractHostileAnimal implements IAnimatable, 
             this.findLoveInterval--;
         }
 
-        if (this.isBigCatReadyForLove() && this.findLoveInterval <= 0) {
+        if (this.isCrocodileReadyForLove() && this.findLoveInterval <= 0) {
             this.findOrCreateFreePartner();
             this.findLoveInterval = FIND_NEARBY_PARTNER_COOLDOWN;
         }
@@ -241,23 +281,23 @@ public class BigCatEntity extends AbstractHostileAnimal implements IAnimatable, 
      * Check if there's a partner nearby, otherwise create a partner to promote breeding
      */
     private void findOrCreateFreePartner() {
-        List<BigCatEntity> nearbyBigCats = this.level.getNearbyEntities(BigCatEntity.class, PARTNER_TARGETING, this, this.getBoundingBox().inflate(BREEDING_RANGE));
-        double distanceToClosestBigCat = Double.MAX_VALUE;
-        BigCatEntity partner = null;
+        List<CrocodileEntity> nearbyCrocodiles = this.level.getNearbyEntities(CrocodileEntity.class, PARTNER_TARGETING, this, this.getBoundingBox().inflate(BREEDING_RANGE));
+        double distanceToClosestCrocodile = Double.MAX_VALUE;
+        CrocodileEntity partner = null;
 
-        // Find another BigCat in love
-        for (BigCatEntity BigCat : nearbyBigCats) {
-            if (this.distanceToSqr(BigCat) < distanceToClosestBigCat) {
-                if (super.canMate(BigCat) && this.distanceToSqr(BigCat) < distanceToClosestBigCat) {
-                    partner = BigCat;
-                    distanceToClosestBigCat = this.distanceToSqr(BigCat);
+        // Find another Crocodile in love
+        for (CrocodileEntity Crocodile : nearbyCrocodiles) {
+            if (this.distanceToSqr(Crocodile) < distanceToClosestCrocodile) {
+                if (super.canMate(Crocodile) && this.distanceToSqr(Crocodile) < distanceToClosestCrocodile) {
+                    partner = Crocodile;
+                    distanceToClosestCrocodile = this.distanceToSqr(Crocodile);
                 }
             }
         }
 
-        // Create another BigCat in love
+        // Create another Crocodile in love
         if (partner == null) {
-            partner = this.level.getNearestEntity(nearbyBigCats, PARTNER_TARGETING, this, this.getX(), this.getY(), this.getZ());
+            partner = this.level.getNearestEntity(nearbyCrocodiles, PARTNER_TARGETING, this, this.getX(), this.getY(), this.getZ());
             if (partner != null) {
                 partner.setInLove(null);
             }
@@ -269,7 +309,7 @@ public class BigCatEntity extends AbstractHostileAnimal implements IAnimatable, 
         return this.random.nextInt(half) + half;
     }
 
-    private boolean isBigCatReadyForLove() {
+    private boolean isCrocodileReadyForLove() {
         return this.isInLove() && this.ticksBeforeBreeding <= 0 && this.getAge() == 0;
     }
 
@@ -281,14 +321,14 @@ public class BigCatEntity extends AbstractHostileAnimal implements IAnimatable, 
     /*********************************************************** Baby ********************************************************/
 
     @Override
-    public BigCatEntity getBreedOffspring(ServerLevel serverLevel, AgeableMob entityIn) {
-        BigCatEntity babyBigCat = CHEntityTypes.BIG_CAT.get().create(serverLevel);
-        babyBigCat.setVariant(this.random.nextBoolean() ? this.getVariant() : babyBigCat.getVariant());
-        return babyBigCat;
+    public CrocodileEntity getBreedOffspring(ServerLevel serverLevel, AgeableMob entityIn) {
+        CrocodileEntity babyCrocodile = CHEntityTypes.CROCODILE.get().create(serverLevel);
+        babyCrocodile.setVariant(this.random.nextBoolean() ? this.getVariant() : babyCrocodile.getVariant());
+        return babyCrocodile;
     }
 
     /**
-     * Can't feed BigCat food
+     * Can't feed Crocodile food
      */
     @Override
     public boolean isFood(ItemStack itemStack) {
@@ -306,7 +346,7 @@ public class BigCatEntity extends AbstractHostileAnimal implements IAnimatable, 
 
     @Override
     public void registerControllers(AnimationData data) {
-        data.addAnimationController(new AnimationController<BigCatEntity>(this, "controller", 0, this::predicate));
+        data.addAnimationController(new AnimationController<CrocodileEntity>(this, "controller", 0, this::predicate));
     }
 
     @Override
@@ -315,6 +355,8 @@ public class BigCatEntity extends AbstractHostileAnimal implements IAnimatable, 
     }
 
     /*********************************************************** Sounds ********************************************************/
+
+    //UPDATE SOUNDS FOR CROC
 
     @Override
     protected SoundEvent getAmbientSound() {
@@ -331,7 +373,6 @@ public class BigCatEntity extends AbstractHostileAnimal implements IAnimatable, 
         return SoundEvents.CAT_DEATH;
     }
 
-    // UPDATE THIS SOUND WITH A PROPER STEP SOUND FOR BIG CAT
     @Override
     protected void playStepSound(BlockPos pos, BlockState state) {
         this.playSound(SoundEvents.CAT_PURR, 0.15F, 1.0F);
@@ -339,16 +380,16 @@ public class BigCatEntity extends AbstractHostileAnimal implements IAnimatable, 
 
     /*********************************************************** Variants ********************************************************/
 
-    public BigCatVariant getBigCatVariant() {
-        return BigCatVariant.getByName(this.entityData.get(DATA_VARIANT_ID));
+    public CrocodileVariant getCrocodileVariant() {
+        return CrocodileVariant.getByName(this.entityData.get(DATA_VARIANT_ID));
     }
 
     @Override
     public String getVariant() {
-        return this.getBigCatVariant().getName();
+        return this.getCrocodileVariant().getName();
     }
 
-    public void setBigCatVariant(BigCatVariant variant) {
+    public void setCrocodileVariant(CrocodileVariant variant) {
         this.setVariant(variant.getName());
     }
 
@@ -357,19 +398,17 @@ public class BigCatEntity extends AbstractHostileAnimal implements IAnimatable, 
         this.entityData.set(DATA_VARIANT_ID, variantName);
     }
 
-    public static enum BigCatVariant {
-        JUNGLE ("jungle"),
-        PANTHER ("panther"),
-        PLAINS ("plains"),
-        SNOW ("snow"),
-        TIGER_JUNGLE ("tiger_jungle"),
-        TIGER_SNOW ("tiger_snow");
+    public static enum CrocodileVariant {
+        CROCODILE ("crocodile"),
+        BLACK ("black"),
+        BROWN ("brown"),
+        TAN ("tan");
 
         final String variantName;
 
-        private static final BigCatVariant[] ALL_VARIANTS = values();
+        private static final CrocodileVariant[] ALL_VARIANTS = values();
 
-        private BigCatVariant(String name) {
+        private CrocodileVariant(String name) {
             this.variantName = name;
         }
 
@@ -377,27 +416,27 @@ public class BigCatEntity extends AbstractHostileAnimal implements IAnimatable, 
             return this.variantName;
         }
 
-        public static BigCatVariant getRandomVariant(RandomSource random) {
+        public static CrocodileVariant getRandomVariant(RandomSource random) {
             return Util.getRandom(ALL_VARIANTS, random);
         }
 
-        public static boolean isValidBigCatVariant(String name) {
-            for (BigCatVariant BigCatVariant : ALL_VARIANTS) {
-                if (BigCatVariant.getName().equals(name.toLowerCase())) {
+        public static boolean isValidCrocodileVariant(String name) {
+            for (CrocodileVariant CrocodileVariant : ALL_VARIANTS) {
+                if (CrocodileVariant.getName().equals(name.toLowerCase())) {
                     return true;
                 }
             }
             return false;
         }
 
-        public static BigCatVariant getByName(String name) {
-            for (BigCatVariant BigCatVariant : ALL_VARIANTS) {
-                if (BigCatVariant.getName().equals(name.toLowerCase())) {
-                    return BigCatVariant;
+        public static CrocodileVariant getByName(String name) {
+            for (CrocodileVariant CrocodileVariant : ALL_VARIANTS) {
+                if (CrocodileVariant.getName().equals(name.toLowerCase())) {
+                    return CrocodileVariant;
                 }
             }
-            ClassicHostiles.LOGGER.error("Couldn't find BigCat variant for: {}.", name);
-            return JUNGLE;
+            ClassicHostiles.LOGGER.error("Couldn't find Crocodile variant for: {}.", name);
+            return CROCODILE;
         }
     }
 
@@ -407,14 +446,55 @@ public class BigCatEntity extends AbstractHostileAnimal implements IAnimatable, 
      * Referenced from {@link Llama}
      */
 
-    public boolean causeFallDamage(float p_148859_, float p_148860_, DamageSource p_148861_) {
-        return false;
+    public void travel(Vec3 p_28383_) {
+        if (this.isEffectiveAi() && this.isInWater()) {
+            this.moveRelative(this.getSpeed(), p_28383_);
+            this.move(MoverType.SELF, this.getDeltaMovement());
+            this.setDeltaMovement(this.getDeltaMovement().scale(0.9D));
+            if (this.getTarget() == null) {
+                this.setDeltaMovement(this.getDeltaMovement().add(0.0D, -0.005D, 0.0D));
+            }
+        } else {
+            super.travel(p_28383_);
+        }
+
     }
 
-    static class BigCatGroupData extends AgeableMob.AgeableMobGroupData {
+    public void tick() {
+        super.tick();
+        if (this.isNoAi()) {
+            this.setAirSupply(this.getMaxAirSupply());
+        } else {
+            if (this.isInWaterRainOrBubble()) {
+                this.setMoistnessLevel(2400);
+            } else {
+                this.setMoistnessLevel(this.getMoistnessLevel() - 1);
+                if (this.getMoistnessLevel() <= 0) {
+                    this.hurt(DamageSource.DRY_OUT, 1.0F);
+                }
+
+                if (this.onGround) {
+                    this.setDeltaMovement(this.getDeltaMovement().add((double)((this.random.nextFloat() * 2.0F - 1.0F) * 0.2F), 0.5D, (double)((this.random.nextFloat() * 2.0F - 1.0F) * 0.2F)));
+                    this.setYRot(this.random.nextFloat() * 360.0F);
+                    this.onGround = false;
+                    this.hasImpulse = true;
+                }
+            }
+
+            if (this.level.isClientSide && this.isInWater() && this.getDeltaMovement().lengthSqr() > 0.03D) {
+                Vec3 vec3 = this.getViewVector(0.0F);
+                float f = Mth.cos(this.getYRot() * ((float)Math.PI / 180F)) * 0.3F;
+                float f1 = Mth.sin(this.getYRot() * ((float)Math.PI / 180F)) * 0.3F;
+                float f2 = 1.2F - this.random.nextFloat() * 0.7F;
+            }
+
+        }
+    }
+
+    static class CrocodileGroupData extends AgeableMob.AgeableMobGroupData {
         public final String variant;
 
-        BigCatGroupData(String variant) {
+        CrocodileGroupData(String variant) {
             super(true);
             this.variant = variant;
         }
